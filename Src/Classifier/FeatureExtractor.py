@@ -1,39 +1,41 @@
-from os.path import dirname, join as pjoin
-import matplotlib.pyplot as plt
-from scipy.io import wavfile
-import scipy.io
 import numpy as np
+import matplotlib.pyplot as plt
+import librosa
+from scipy.io import wavfile
 
-def plot_fft(filename):
+def plot_fft(filename):                                                                     # plot the frequencies of a wav file
     samplerate, transform = wavfile.read(filename)
 
-    plt.plot(np.fft.rfft(transform), label="Left channel")
+    plt.plot(np.fft.rfft(transform))
     plt.legend()
     plt.xlabel("Time [s]")
     plt.ylabel("Hz")
     plt.show()
 
-def spectral_centroid(x, samplerate):
-    magnitudes = np.abs(np.fft.rfft(x))                       # magnitudes of positive frequencies
-    length = len(x)
-    freqs = np.abs(np.fft.fftfreq(length, 1.0/samplerate)[:length//2+1]) # positive frequencies
-    return np.sum(magnitudes*freqs) / np.sum(magnitudes)      # return weighted mean
+def calculate_spectral_centroid(data, sampleRate):
+    magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
+    length = len(data)
+    freqs = np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1])                    # positive frequencies
+    return np.sum(magnitudes*freqs) / np.sum(magnitudes)                                    # return weighted mean
 
-plot_fft('../../Data/5-251489-A-24.wav')
-samplerate, data = wavfile.read('../../Data/5-251489-A-24.wav')
-length = data.shape[0] / samplerate
-miliseconds = int(samplerate / 1000)
+def wav_to_spectral_centroid(fileName, frameSize):
+    sampleRate, spectralDencity = wavfile.read(fileName)
+    length = spectralDencity.shape[0] / sampleRate
 
-datapoints = [data[i:i+(miliseconds * 10)] for i in range(0, len(data), (miliseconds * 10))]
+    frames = [spectralDencity[i:i+(frameSize)] for i in range(0, len(spectralDencity), (frameSize))]   # group spectralDencity into frames
+    return [calculate_spectral_centroid(frame, sampleRate) for frame in frames]             # return list of spectral centroids
 
-centroids = []
-for i in range(len(datapoints)):
-    centroids.append(spectral_centroid(datapoints[i], samplerate))
+frameSize = 500
 
-#centroids = map(spectral_centroid, datapoints, samplerate)
+centroids = wav_to_spectral_centroid('../../Data/5-251489-A-24.wav', frameSize)
 
-plt.plot(centroids, label="Left channel")
+testWav, sr = librosa.load('../../Data/5-251489-A-24.wav')
+test = librosa.feature.spectral_centroid(y=testWav, sr=sr, n_fft=frameSize, hop_length=500)[0]
+
+plt.plot(centroids, color='r')
+plt.plot(test, color='b')
+plt.plot
 plt.legend()
-plt.xlabel("Time [s]")
-plt.ylabel("Hz")
+plt.xlabel("Centroids")
+plt.ylabel("Spectral Rate")
 plt.show()
