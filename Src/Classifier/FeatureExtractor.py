@@ -27,9 +27,9 @@ def wav_to_spectral_centroid(fileName, frameSize):
 
 frameSize = 500
 
-centroids = wav_to_spectral_centroid('../../Data/5-251489-A-24.wav', frameSize)
+centroids = wav_to_spectral_centroid('../../Data/1-59513-A.ogg', frameSize)
 
-testWav, sr = librosa.load('../../Data/5-251489-A-24.wav')
+testWav, sr = librosa.load('../../Data/1-59513-A.ogg')
 test = librosa.feature.spectral_centroid(y=testWav, sr=sr, n_fft=frameSize, hop_length=500)[0]
 
 plt.plot(centroids, color='r')
