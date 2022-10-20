@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 import librosa
 from scipy.io import wavfile
 
@@ -16,7 +17,8 @@ def calculate_spectral_centroid(data, sampleRate):
     magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
     length = len(data)
     freqs = np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1])                    # positive frequencies
-    return np.sum(magnitudes*freqs) / np.sum(magnitudes)                                    # return weighted mean
+    sums = np.sum(magnitudes)
+    return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                                    # return weighted mean
 
 def wav_to_spectral_centroid(fileName, frameSize):
     sampleRate, spectralDencity = wavfile.read(fileName)
@@ -27,13 +29,18 @@ def wav_to_spectral_centroid(fileName, frameSize):
 
 frameSize = 500
 
-centroids = wav_to_spectral_centroid('../../Data/1-59513-A.ogg', frameSize)
+#plot_fft('../../Data/5-251489-A-24.wav')
 
-testWav, sr = librosa.load('../../Data/1-59513-A.ogg')
+centroids = wav_to_spectral_centroid('../../Data/5-251489-A-24.wav', frameSize)
+centroidsTwo = wav_to_spectral_centroid('../../Data/5-263902-A-36.wav', frameSize)
+centroidsThree = wav_to_spectral_centroid('../../Data/crying_baby/2-66637-B-20.wav', frameSize)
+
+testWav, sr = librosa.load('../../Data/5-251489-A-24.wav')
 test = librosa.feature.spectral_centroid(y=testWav, sr=sr, n_fft=frameSize, hop_length=500)[0]
 
 plt.plot(centroids, color='r')
-plt.plot(test, color='b')
+plt.plot(centroidsTwo, color='b')
+plt.plot(centroidsThree, color='g')
 plt.plot
 plt.legend()
 plt.xlabel("Centroids")
