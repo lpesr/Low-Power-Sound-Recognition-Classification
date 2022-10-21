@@ -1,4 +1,4 @@
-import FeatureExtractor
+import FeatureExtractor as fe
 from os import listdir
 from os.path import isfile, join
 import numpy as np
@@ -8,6 +8,17 @@ import os
 
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "//" + label) if isfile(join(dir + "//" + label, f))]
+
+def prepare_input_data(dir, labels, frameSize) :
+    dataVector = []
+    labelVector = []
+    for label in labels :
+        for file in get_wav_files(dir, label) :
+            dataVector.append(fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize))
+            labelVector.append(label)
+    return (dataVector, labelVector)
+
+data = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["airplane", "breathing"], 500)
 
 dirname = os.path.dirname(__file__)
 
