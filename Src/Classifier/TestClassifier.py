@@ -3,6 +3,9 @@ from os import listdir
 from os.path import isfile, join
 import numpy as np
 from sklearn.svm import SVC
+from sklearn.model_selection import RepeatedKFold
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import f1_score
 import pandas as pd
 import os
 
@@ -18,25 +21,23 @@ def prepare_input_data(dir, labels, frameSize) :
             labelVector.append(label)
     return (dataVector, labelVector)
 
-data = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["airplane", "breathing"], 500)
+(X, Y) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["airplane", "breathing"], 500)
+X = np.array(X)
+Y = np.array(Y)
 
 dirname = os.path.dirname(__file__)
 
 #Define all of the classifiers to test
 classifiers = [
-    KNeighborsClassifier(3),
-    SVC(kernel="linear", gamma="auto", C=10),
-    SVC(kernel="rbf", gamma="auto", decision_function_shape='ovo', C=1000),
-    SVC(kernel="sigmoid", gamma="auto", C=10),
-    DecisionTreeClassifier(max_depth=100),
-    RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
-    MLPClassifier(alpha=1, max_iter=1000),
-    AdaBoostClassifier(learning_rate=0.5),
-    GaussianNB(),
-    QuadraticDiscriminantAnalysis(),
-    LinearDiscriminantAnalysis(),
-    #GaussianProcessClassifier(1.1 * RBF(1.0), random_state=0, multi_class="one_vs_one"),
+    SVC(kernel="linear", gamma="auto"),
 ]
+names = [
+    "SVM-Linear"
+]
+
+#Normalize the data
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X)
 
 numKFoldSplits = 10
 numKFoldRep = 2
@@ -54,7 +55,7 @@ for j in range(len(classifiers)):
     kf = RepeatedKFold(n_splits=numKFoldSplits, n_repeats=numKFoldRep)
     for train, test in kf.split(X):
         X_train, X_test = X[train], X[test]
-        y_train, y_test = y[train], y[test]
+        y_train, y_test = Y[train], Y[test]
 
         #Fit the classifier and label the testing split
         clf = classifiers[j].fit(X_train, y_train)
@@ -62,10 +63,6 @@ for j in range(len(classifiers)):
 
         #Caculate the F1 score and store it
         results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
-
-        #Caculate the acuraccy and store it
-        #correct = len([i for i,(predition, actual) in enumerate(zip(preditctions, y_test)) if predition == actual])
-        #results[j][i] = correct / len(preditctions)
         
         i += 1
 
