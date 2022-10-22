@@ -4,10 +4,12 @@ from os.path import isfile, join
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.model_selection import RepeatedKFold
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import f1_score
 import pandas as pd
 import os
+import pickle
+import sys
+import time
 
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "//" + label) if isfile(join(dir + "//" + label, f))]
@@ -35,10 +37,6 @@ names = [
     "SVM-Linear"
 ]
 
-#Normalize the data
-scaler = MinMaxScaler()
-X = scaler.fit_transform(X)
-
 numKFoldSplits = 10
 numKFoldRep = 2
 
@@ -46,9 +44,12 @@ numKFoldRep = 2
 i, j = numKFoldSplits * numKFoldRep, len(classifiers)
 results = [[0 for x in range(i)] for y in range(j)] 
 
+print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (NS)]  ")
+
 #Iterate over all of the classifiers
 for j in range(len(classifiers)):
     i = 0
+    totalTime = 0
 
     #K cross validate the data (there will be an equal number of both classes to train on)
     #This is because the data was split and then combined earlier
@@ -59,11 +60,16 @@ for j in range(len(classifiers)):
 
         #Fit the classifier and label the testing split
         clf = classifiers[j].fit(X_train, y_train)
+
+        st = time.process_time()
         preditctions = clf.predict(X_test)
+        et = time.process_time()
 
         #Caculate the F1 score and store it
         results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
         
         i += 1
+        totalTime += et - st
 
-    print((names[j], results[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f")))
+    p = pickle.dumps(clf)
+    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), (sys.getsizeof(p) / 1000), ((totalTime * 1000000000) / numKFoldSplits / numKFoldRep / len(X_test))))
