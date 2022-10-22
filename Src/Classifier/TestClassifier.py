@@ -4,6 +4,13 @@ from os.path import isfile, join
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.model_selection import RepeatedKFold
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import f1_score
 import pandas as pd
 import os
@@ -23,7 +30,7 @@ def prepare_input_data(dir, labels, frameSize) :
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["airplane", "breathing"], 500)
+(X, Y) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking", "hand_saw", "vacuum_cleaner", "fireworks", "crackling_fire", "siren"], 500)
 X = np.array(X)
 Y = np.array(Y)
 
@@ -31,10 +38,26 @@ dirname = os.path.dirname(__file__)
 
 #Define all of the classifiers to test
 classifiers = [
-    SVC(kernel="linear", gamma="auto"),
+    KNeighborsClassifier(3),
+    SVC(kernel="linear", gamma="auto", C=1000),
+    SVC(kernel="rbf", gamma="auto", C=1000),
+    SVC(kernel="sigmoid", gamma="auto", C=1000),
+    DecisionTreeClassifier(max_depth=10000),
+    RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
+    MLPClassifier(),
+    AdaBoostClassifier(learning_rate=0.5),
+    GaussianNB(),
 ]
 names = [
-    "SVM-Linear"
+    "Nearest Neighbors",
+    "Linear SVM",
+    "RBF SVM",
+    "Sigmoid SVM",
+    "Decision Tree",
+    "Random Forest",
+    "Neural Net",
+    "AdaBoost",
+    "Naive Bayes",
 ]
 
 numKFoldSplits = 10
@@ -43,6 +66,10 @@ numKFoldRep = 2
 #Create a results matrix
 i, j = numKFoldSplits * numKFoldRep, len(classifiers)
 results = [[0 for x in range(i)] for y in range(j)] 
+
+#Normalize the data
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X)
 
 print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (NS)]  ")
 
