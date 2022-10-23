@@ -8,7 +8,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import MinMaxScaler
@@ -72,7 +72,7 @@ results = [[0 for x in range(i)] for y in range(j)]
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X)
 
-print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (NS)]  ")
+print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (MS)]  ")
 
 #Iterate over all of the classifiers
 for j in range(len(classifiers)):
@@ -89,9 +89,9 @@ for j in range(len(classifiers)):
         #Fit the classifier and label the testing split
         clf = classifiers[j].fit(X_train, y_train)
 
-        st = time.process_time()
+        st = time.time_ns()
         preditctions = clf.predict(X_test)
-        et = time.process_time()
+        et = time.time_ns()
 
         #Caculate the F1 score and store it
         results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
@@ -100,4 +100,4 @@ for j in range(len(classifiers)):
         totalTime += et - st
 
     p = pickle.dumps(clf)
-    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), (sys.getsizeof(p) / 1000), ((totalTime * 1000000000) / numKFoldSplits / numKFoldRep / len(X_test))))
+    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), format(sys.getsizeof(p) / 1000, ".3f"), format((totalTime / 1000) / (i * len(X_test)), ".3f")))

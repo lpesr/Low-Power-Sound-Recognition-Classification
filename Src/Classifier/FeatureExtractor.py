@@ -34,3 +34,7 @@ def wav_to_ZCR(fileName, frameSize) :
     for point in zeroCrossings :
         zcr[int(point / frameSize)] += 1
     return zcr
+
+def wav_threshold_normalization(wav, threshold) :
+    index = next(x[0] for x in enumerate(wav) if x[1] > threshold)
+    return wav[index:] + [0] * index
