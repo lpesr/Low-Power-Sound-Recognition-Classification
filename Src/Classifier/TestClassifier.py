@@ -10,6 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import f1_score
 import pandas as pd
@@ -32,7 +33,7 @@ def prepare_input_data(dir, labels, frameSize) :
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking", "siren", "crackling_fire"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = prepare_input_data("..\..\Data", ["glass_breaking", "siren", "crackling_fire", "clapping", "crying_baby"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 
@@ -40,14 +41,13 @@ dirname = os.path.dirname(__file__)
 
 #Define all of the classifiers to test
 classifiers = [
-    KNeighborsClassifier(3),
-    SVC(kernel="linear", gamma="auto", C=1000),
-    SVC(kernel="rbf", gamma="auto", C=1000),
-    SVC(kernel="sigmoid", gamma="auto", C=1000),
+    KNeighborsClassifier(10),
+    SVC(kernel="linear"),
+    SVC(kernel="rbf"),
+    SVC(kernel="sigmoid"),
     DecisionTreeClassifier(max_depth=100),
     RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
     MLPClassifier(max_iter=1000),
-    AdaBoostClassifier(learning_rate=0.5),
     GaussianNB(),
 ]
 names = [
@@ -58,7 +58,6 @@ names = [
     "Decision Tree",
     "Random Forest",
     "Neural Net",
-    "AdaBoost",
     "Naive Bayes",
 ]
 

@@ -11,4 +11,4 @@ def relocate_file(dir, filename, label) :
     os.makedirs(dir + "\\" + label, exist_ok=True)
     os.rename(dir + "\\audio\\" + filename, dir + "\\" + label + "\\" + filename)
 
-read_csv_label_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\esc50.csv", "U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data")
+read_csv_label_data("..\..\Data\esc50.csv", "..\..\Data")
