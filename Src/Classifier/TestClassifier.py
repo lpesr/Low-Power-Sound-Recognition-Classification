@@ -26,11 +26,13 @@ def prepare_input_data(dir, labels, frameSize) :
     labelVector = []
     for label in labels :
         for file in get_wav_files(dir, label) :
-            dataVector.append(fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize))
+            centroids = fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize)
+            zcr = fe.wav_to_ZCR(dir + "//" + label + "//" + file, frameSize)
+            dataVector.append(centroids + zcr)
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking", "hand_saw", "vacuum_cleaner", "fireworks", "crackling_fire", "siren"], 500)
+(X, Y) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking", "siren", "crackling_fire"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 
@@ -42,9 +44,9 @@ classifiers = [
     SVC(kernel="linear", gamma="auto", C=1000),
     SVC(kernel="rbf", gamma="auto", C=1000),
     SVC(kernel="sigmoid", gamma="auto", C=1000),
-    DecisionTreeClassifier(max_depth=10000),
+    DecisionTreeClassifier(max_depth=100),
     RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
-    MLPClassifier(),
+    MLPClassifier(max_iter=1000),
     AdaBoostClassifier(learning_rate=0.5),
     GaussianNB(),
 ]
