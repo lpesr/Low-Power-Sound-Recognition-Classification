@@ -33,7 +33,7 @@ def prepare_input_data(dir, labels, frameSize) :
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data("..\..\Data", ["glass_breaking", "siren", "crackling_fire", "clapping", "crying_baby"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = prepare_input_data("..\..\Data", ["glass_breaking", "siren"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 

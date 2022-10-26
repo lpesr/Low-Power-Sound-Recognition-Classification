@@ -29,20 +29,19 @@ def prepare_input_data(dir, labels, frameSize) :
     for label in labels :
         for file in get_wav_files(dir, label) :
             centroids = fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize)
-            #zcr = fe.wav_to_ZCR(dir + "//" + label + "//" + file, frameSize)
-            #dataVector.append(centroids + zcr)
-            dataVector.append(centroids)
+            zcr = fe.wav_to_ZCR(dir + "//" + label + "//" + file, frameSize)
+            dataVector.append(centroids + zcr)
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X1, Y1) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking"], 1000)
-(X2, Y2) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["siren"], 1000)
-(X3, Y3) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["hand_saw"], 1000)
-(X4, Y4) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["crackling_fire"], 1000)
-(X5, Y5) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["clapping"], 1000)
-(X6, Y6) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["crying_baby"], 1000)
-(X7, Y7) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["vacuum_cleaner"], 1000)
-(X8, Y8) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["engine"], 1000)
+(X1, Y1) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking"], 3000)
+(X2, Y2) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["siren"], 3000)
+(X3, Y3) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["hand_saw"], 3000)
+(X4, Y4) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["crackling_fire"], 3000)
+(X5, Y5) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["clapping"], 3000)
+(X6, Y6) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["crying_baby"], 3000)
+(X7, Y7) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["vacuum_cleaner"], 3000)
+(X8, Y8) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["engine"], 3000)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]
@@ -76,8 +75,6 @@ numKFoldRep = 2
 
 #Normalize the data
 scaler = MaxAbsScaler()
-for k in range(0, 8) :
-    data[k] = scaler.fit_transform(data[k])
 
 #Create a results matrix
 i, j = numKFoldSplits * numKFoldRep, len(classifiers)
@@ -87,16 +84,17 @@ i, j = numKFoldSplits * numKFoldRep, len(classifiers)
 #Iterate over all of the classifiers
 for j in range(len(classifiers)):
     totalTime = 0
-    X = data[0]
+    Xbuf = data[0]
     Y = labels[0]
 
     fScores = ""
     memSize = ""
     elapsedTime = ""
 
-    for k in range(1, 8):
+    for k in range(1, 8): 
         i = 0
-        X = np.append(X, data[k], axis=0)
+        Xbuf = np.append(Xbuf, data[k], axis=0)
+        X = scaler.fit_transform(Xbuf)
         Y = np.append(Y, labels[k], axis=0)
 
         results = [0 for x in range(numKFoldSplits * numKFoldRep)]

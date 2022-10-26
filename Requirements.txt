@@ -4,3 +4,7 @@ pandas
 pulp
 matplotlib
 openpyxl
+pickle
+time
+sys
+librosa
