@@ -18,22 +18,42 @@ def calculate_spectral_centroid(data, sampleRate) :
     length = len(data)
     freqs = np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1])                    # positive frequencies
     sums = np.sum(magnitudes)
-    return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                                    # return weighted mean
+    return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
-def wav_to_spectral_centroid(fileName, frameSize) :
+def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10) :
     sampleRate, spectralDencity = wavfile.read(fileName)
-    length = spectralDencity.shape[0] / sampleRate
+    frameSize = int(sampleRate * frameTime)
+
+    if len(spectralDencity.shape) > 1 :
+        if spectralDencity.shape[1] > 1 :
+            spectralDencity = spectralDencity[:,0]
 
     frames = [spectralDencity[i:i+(frameSize)] for i in range(0, len(spectralDencity), (frameSize))]   # group spectralDencity into frames
-    return [calculate_spectral_centroid(frame, sampleRate) for frame in frames]             # return list of spectral centroids
+    centroids = [calculate_spectral_centroid(frame, sampleRate) for frame in frames]                   # return list of spectral centroids
+    padding = round((paddingSize - len(centroids) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize))
+    if padding > 0:
+        return centroids + [0] * padding
+    else:
+        return centroids[:round(paddingSize * (sampleRate / frameSize))]
 
-def wav_to_ZCR(fileName, frameSize) :
-    _, spectralDencity = wavfile.read(fileName)
+def wav_to_ZCR(fileName, frameTime, paddingSize = 10) :
+    sampleRate, spectralDencity = wavfile.read(fileName)
+    frameSize = int(sampleRate * frameTime)
+
+    if len(spectralDencity.shape) > 1 :
+        if spectralDencity.shape[1] > 1 :
+            spectralDencity = spectralDencity[:,0]
+
     zeroCrossings = np.nonzero(np.diff(spectralDencity > 0))[0]
     zcr = [0] * int(len(spectralDencity) / frameSize + 1)
     for point in zeroCrossings :
         zcr[int(point / frameSize)] += 1
-    return zcr
+
+    padding = round((paddingSize - len(zcr) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize))
+    if padding > 0:
+        return zcr + [0] * padding
+    else:
+        return zcr[:round(paddingSize * (sampleRate / frameSize))]
 
 def wav_threshold_normalization(wav, threshold) :
     index = next(x[0] for x in enumerate(wav) if x[1] > threshold)
