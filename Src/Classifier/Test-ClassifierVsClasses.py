@@ -1,4 +1,3 @@
-import FeatureExtractor as fe
 from os import listdir
 from os.path import isfile, join
 import numpy as np
@@ -20,6 +19,9 @@ import sys
 import time
 import matplotlib.pyplot as plt
 
+sys.path.insert(1, '..\FeatureExtractor')
+import FeatureExtractor as fe
+
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "//" + label) if isfile(join(dir + "//" + label, f))]
 
@@ -34,14 +36,14 @@ def prepare_input_data(dir, labels, frameSize) :
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X1, Y1) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["glass_breaking"], 3000)
-(X2, Y2) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["siren"], 3000)
-(X3, Y3) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["hand_saw"], 3000)
-(X4, Y4) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["crackling_fire"], 3000)
-(X5, Y5) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["clapping"], 3000)
-(X6, Y6) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["crying_baby"], 3000)
-(X7, Y7) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["vacuum_cleaner"], 3000)
-(X8, Y8) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data", ["engine"], 3000)
+(X1, Y1) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["glass_breaking"], 3000)
+(X2, Y2) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["siren"], 3000)
+(X3, Y3) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["hand_saw"], 3000)
+(X4, Y4) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["crackling_fire"], 3000)
+(X5, Y5) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["clapping"], 3000)
+(X6, Y6) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["crying_baby"], 3000)
+(X7, Y7) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["vacuum_cleaner"], 3000)
+(X8, Y8) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["engine"], 3000)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]
@@ -79,7 +81,7 @@ scaler = MaxAbsScaler()
 #Create a results matrix
 i, j = numKFoldSplits * numKFoldRep, len(classifiers)
 
-#print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (MS)]  ")
+#print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (uS)]  ")
 
 #Iterate over all of the classifiers
 for j in range(len(classifiers)):

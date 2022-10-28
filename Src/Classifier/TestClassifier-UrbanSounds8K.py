@@ -24,20 +24,26 @@ import FeatureExtractor as fe
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "//" + label) if isfile(join(dir + "//" + label, f))]
 
-def prepare_input_data(dir, labels, frameSize) :
-    dataVector = []
-    labelVector = []
-    for label in labels :
-        for file in get_wav_files(dir, label) :
-            centroids = fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize)
-            zcr = fe.wav_to_ZCR(dir + "//" + label + "//" + file, frameSize)
-            dataVector.append(centroids + zcr)
-            labelVector.append(label)
-    return (dataVector, labelVector)
+def prepare_input_data(dir, labels, frameTime) :
+    dataFolds = []
+    labelFolds = []
+    for i in range(1, 11) :
+        dataVector = []
+        labelVector = []
+        for label in labels :
+            for file in get_wav_files(dir + "//fold" + str(i), label) :
+                try:
+                    centroids = fe.wav_to_spectral_centroid(dir  + "//fold" + str(i) + "//" + label + "//" + file, frameTime, 3)
+                    zcr = fe.wav_to_ZCR(dir + "//fold" + str(i) + "//" + label + "//" + file, frameTime, 3)
+                    dataVector.append(centroids + zcr)
+                    labelVector.append(label)
+                except Exception as error:
+                    print('Caught this error: ' + repr(error))
+        dataFolds.append(dataVector)
+        labelFolds.append(labelVector)
+    return (dataFolds, labelFolds)
 
-(X, Y) = prepare_input_data("..\..\Data\ESC-50", ["glass_breaking", "siren"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
-X = np.array(X)
-Y = np.array(Y)
+(dataFolds, labelFolds) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["drilling", "jackhammer", "siren", "dog_bark"], 0.01)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 
@@ -63,30 +69,24 @@ names = [
     "Naive Bayes",
 ]
 
-numKFoldSplits = 10
-numKFoldRep = 2
-
 #Create a results matrix
-i, j = numKFoldSplits * numKFoldRep, len(classifiers)
+i, j = len(dataFolds), len(classifiers)
 results = [[0 for x in range(i)] for y in range(j)] 
 
 #Normalize the data
 scaler = MinMaxScaler()
-X = scaler.fit_transform(X)
+for k in range(0, len(dataFolds)):
+    dataFolds[k] = scaler.fit_transform(dataFolds[k])
 
 print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (uS)]  ")
 
 #Iterate over all of the classifiers
 for j in range(len(classifiers)):
-    i = 0
     totalTime = 0
 
-    #K cross validate the data (there will be an equal number of both classes to train on)
-    #This is because the data was split and then combined earlier
-    kf = RepeatedKFold(n_splits=numKFoldSplits, n_repeats=numKFoldRep)
-    for train, test in kf.split(X):
-        X_train, X_test = X[train], X[test]
-        y_train, y_test = Y[train], Y[test]
+    for i in range(0, 10):
+        X_train, X_test = [item for index, sublist in enumerate(dataFolds) if index != i for item in sublist], dataFolds[i]
+        y_train, y_test = [item for index, sublist in enumerate(labelFolds) if index != i for item in sublist], labelFolds[i]
 
         #Fit the classifier and label the testing split
         clf = classifiers[j].fit(X_train, y_train)
@@ -98,7 +98,6 @@ for j in range(len(classifiers)):
         #Caculate the F1 score and store it
         results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
         
-        i += 1
         totalTime += et - st
 
     p = pickle.dumps(clf)
