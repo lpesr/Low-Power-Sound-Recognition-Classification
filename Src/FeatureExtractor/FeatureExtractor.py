@@ -34,7 +34,7 @@ def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10) :
     if padding > 0:
         return centroids + [0] * padding
     else:
-        return centroids[:round(paddingSize * (sampleRate / frameSize))]
+        return centroids[:round(paddingSize * (float(sampleRate) / float(frameSize)))]
 
 def wav_to_ZCR(fileName, frameTime, paddingSize = 10) :
     sampleRate, spectralDencity = wavfile.read(fileName)
@@ -49,11 +49,11 @@ def wav_to_ZCR(fileName, frameTime, paddingSize = 10) :
     for point in zeroCrossings :
         zcr[int(point / frameSize)] += 1
 
-    padding = round((paddingSize - len(zcr) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize))
+    padding = round((paddingSize - len(zcr) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize)) 
     if padding > 0:
         return zcr + [0] * padding
     else:
-        return zcr[:round(paddingSize * (sampleRate / frameSize))]
+        return zcr[:round(paddingSize * (float(sampleRate) / float(frameSize)))]
 
 def wav_threshold_normalization(wav, threshold) :
     index = next(x[0] for x in enumerate(wav) if x[1] > threshold)

@@ -34,8 +34,8 @@ def prepare_input_data(dir, labels, frameTime) :
             for file in get_wav_files(dir + "//fold" + str(i), label) :
                 try:
                     centroids = fe.wav_to_spectral_centroid(dir  + "//fold" + str(i) + "//" + label + "//" + file, frameTime, 3)
-                    zcr = fe.wav_to_ZCR(dir + "//fold" + str(i) + "//" + label + "//" + file, frameTime, 3)
-                    dataVector.append(centroids + zcr)
+                    #zcr = fe.wav_to_ZCR(dir + "//fold" + str(i) + "//" + label + "//" + file, frameTime, 3)
+                    dataVector.append(centroids)# + zcr)
                     labelVector.append(label)
                 except Exception as error:
                     print('Caught this error: ' + repr(error))
@@ -43,29 +43,29 @@ def prepare_input_data(dir, labels, frameTime) :
         labelFolds.append(labelVector)
     return (dataFolds, labelFolds)
 
-(dataFolds, labelFolds) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["drilling", "jackhammer", "siren", "dog_bark"], 0.01)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(dataFolds, labelFolds) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling"], 0.068)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 
 #Define all of the classifiers to test
 classifiers = [
-    KNeighborsClassifier(10),
-    SVC(kernel="linear"),
-    SVC(kernel="rbf"),
-    SVC(kernel="sigmoid"),
-    DecisionTreeClassifier(max_depth=100),
-    RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
-    MLPClassifier(max_iter=1000),
+    #KNeighborsClassifier(10),
+    #SVC(kernel="linear"),
+    #SVC(kernel="rbf"),
+    #SVC(kernel="sigmoid"),
+    #DecisionTreeClassifier(max_depth=100),
+    #RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
+    #MLPClassifier(max_iter=1000),
     GaussianNB(),
 ]
 names = [
-    "Nearest Neighbors",
-    "Linear SVM",
-    "RBF SVM",
-    "Sigmoid SVM",
-    "Decision Tree",
-    "Random Forest",
-    "Neural Net",
+    #"Nearest Neighbors",
+    #"Linear SVM",
+    #"RBF SVM",
+    #"Sigmoid SVM",
+    #"Decision Tree",
+    #"Random Forest",
+    #"Neural Net",
     "Naive Bayes",
 ]
 
