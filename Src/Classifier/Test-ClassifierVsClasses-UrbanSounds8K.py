@@ -19,7 +19,7 @@ import pickle
 import sys
 import time
 
-sys.path.insert(1, '..\FeatureExtractor')
+sys.path.insert(1, 'U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Src\\FeatureExtractor')
 import FeatureExtractor as fe
 
 def get_wav_files(dir, label) :
@@ -44,14 +44,14 @@ def prepare_input_data(dir, labels, frameTime) :
         labelFolds.append(labelVector)
     return (dataFolds, labelFolds)
 
-(X1, Y1) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["drilling"], 0.068)
-(X2, Y2) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["gun_shot"], 0.068)
-(X3, Y3) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["siren"], 0.068)
-(X4, Y4) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["children_playing"], 0.068)
-(X5, Y5) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["car_horn"], 0.068)
-(X6, Y6) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["air_conditioner"], 0.068)
-(X7, Y7) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["engine_idling"], 0.068)
-(X8, Y8) = prepare_input_data("..\\..\\Data\\UrbanSounds8K", ["street_music"], 0.068)
+(X1, Y1) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["drilling"], 0.068)
+(X2, Y2) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["gun_shot"], 0.068)
+(X3, Y3) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["siren"], 0.068)
+(X4, Y4) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["children_playing"], 0.068)
+(X5, Y5) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["car_horn"], 0.068)
+(X6, Y6) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["air_conditioner"], 0.068)
+(X7, Y7) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["engine_idling"], 0.068)
+(X8, Y8) = prepare_input_data("U:\\GDP\\ML Testing\\Low-Power-Sound-Recognition-Classification\\Data\\UrbanSounds8K", ["street_music"], 0.068)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]
@@ -83,28 +83,27 @@ names = [
 #Create a results matrix
 i, j = len(X1), len(classifiers)
 
-#Normalize the data
-scaler = MinMaxScaler()
-
 print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (uS)]  ")
 
 #Iterate over all of the classifiers
 for j in range(len(classifiers)):
+    scaler = MinMaxScaler()
     totalTime = 0
-    X = data[0]
-    Y = labels[0]
+    Xbuf = data[0]
+    Y = labels[0].copy()
 
     fScores = ""
     memSize = ""
     elapsedTime = ""
 
-    for k in range(1, 8): 
+    for k in range(1, len(data)): 
         i = 0
-        X = [list + data[k][index] for index, list in enumerate(X)]
-        for l in range(0, len(X)):
-            X[l] = scaler.fit_transform(X[l])
+        X = [0] * len(Xbuf)
+        Xbuf = [list + data[k][index] for index, list in enumerate(Xbuf)]
+        for l in range(0, len(Xbuf)):
+            X[l] = scaler.fit_transform(Xbuf[l])
         for l in range(0, len(Y)):
-            Y[l] = Y[l] + labels[k][l]
+            Y[l] = Y[l] + labels[k][l].copy()
 
         results = [0 for x in range(len(X1))]
 
