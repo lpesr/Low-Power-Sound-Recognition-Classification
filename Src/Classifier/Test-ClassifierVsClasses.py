@@ -19,31 +19,33 @@ import sys
 import time
 import matplotlib.pyplot as plt
 
-sys.path.insert(1, '..\FeatureExtractor')
+dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import FeatureExtractor as fe
 
 def get_wav_files(dir, label) :
-    return [f for f in listdir(dir + "//" + label) if isfile(join(dir + "//" + label, f))]
+    return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
 
 def prepare_input_data(dir, labels, frameSize) :
     dataVector = []
     labelVector = []
     for label in labels :
         for file in get_wav_files(dir, label) :
-            centroids = fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize)
-            zcr = fe.wav_to_ZCR(dir + "//" + label + "//" + file, frameSize)
+            centroids = fe.wav_to_spectral_centroid(dir + "/" + label + "/" + file, frameSize)
+            zcr = fe.wav_to_ZCR(dir + "/" + label + "/" + file, frameSize)
             dataVector.append(centroids + zcr)
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X1, Y1) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["glass_breaking"], 3000)
-(X2, Y2) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["siren"], 3000)
-(X3, Y3) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["hand_saw"], 3000)
-(X4, Y4) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["crackling_fire"], 3000)
-(X5, Y5) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["clapping"], 3000)
-(X6, Y6) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["crying_baby"], 3000)
-(X7, Y7) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["vacuum_cleaner"], 3000)
-(X8, Y8) = prepare_input_data("U:\GDP\ML Testing\Low-Power-Sound-Recognition-Classification\Data\ESC-50", ["engine"], 3000)
+(X1, Y1) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["glass_breaking"], 0.02)
+(X2, Y2) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["siren"], 0.02)
+(X3, Y3) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["hand_saw"], 0.02)
+(X4, Y4) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["crackling_fire"], 0.02)
+(X5, Y5) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["clapping"], 0.02)
+(X6, Y6) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["crying_baby"], 0.02)
+(X7, Y7) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["vacuum_cleaner"], 0.02)
+(X8, Y8) = prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["engine"], 0.02)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]
@@ -126,4 +128,4 @@ for j in range(len(classifiers)):
         memSize += format(sys.getsizeof(p) / 1000, ".3f") + " & "
         elapsedTime += format((totalTime / 1000) / (i * len(X_test)), ".3f") + " & "
 
-    print(names[j] + " & " + fScores + memSize + elapsedTime[:-3] + " \\\\")
+    print(names[j] + " & " + fScores + memSize + elapsedTime[:-3] + "\\\\")

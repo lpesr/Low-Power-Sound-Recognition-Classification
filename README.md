@@ -50,7 +50,7 @@ requierments.txt contains a lit of python modules that can be installed with the
 following command:
 
 ```BASH
-pip install -r requirements.txt 
+pip install -r Requirements.txt 
 ```
 
 ### Requirements:

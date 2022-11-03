@@ -18,9 +18,8 @@ def calculate_spectral_centroid(data, sampleRate) :
     magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
     length = len(data)                    
     freqs = np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1])                    # positive frequencies
-    melFreqs = list(map(lambda f: 2595 * np.log10(1 + (f / 700)), freqs))
     sums = np.sum(magnitudes)
-    return 0 if sums == 0 else np.sum(magnitudes*melFreqs) / sums                              # return weighted mean
+    return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
 def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10) :
     sampleRate, spectralDencity = wavfile.read(fileName)

@@ -18,24 +18,24 @@ import pickle
 import sys
 import time
 
-sys.path.insert(1, '..\FeatureExtractor')
+sys.path.insert(1, '../FeatureExtractor')
 import FeatureExtractor as fe
 
 def get_wav_files(dir, label) :
-    return [f for f in listdir(dir + "//" + label) if isfile(join(dir + "//" + label, f))]
+    return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
 
 def prepare_input_data(dir, labels, frameSize) :
     dataVector = []
     labelVector = []
     for label in labels :
         for file in get_wav_files(dir, label) :
-            centroids = fe.wav_to_spectral_centroid(dir + "//" + label + "//" + file, frameSize)
-            zcr = fe.wav_to_ZCR(dir + "//" + label + "//" + file, frameSize)
+            centroids = fe.wav_to_spectral_centroid(dir + "/" + label + "/" + file, frameSize)
+            zcr = fe.wav_to_ZCR(dir + "/" + label + "/" + file, frameSize)
             dataVector.append(centroids + zcr)
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data("..\..\Data\ESC-50", ["glass_breaking", "siren"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = prepare_input_data("../../Data/ESC-50", ["glass_breaking", "siren"], 0.05) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 
