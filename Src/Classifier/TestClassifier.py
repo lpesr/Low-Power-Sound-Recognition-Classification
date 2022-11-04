@@ -26,18 +26,40 @@ import FeatureExtractor as fe
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
 
-def prepare_input_data(dir, labels, frameSize) :
+def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
+    """Extract the feature vectors from the WAV files
+    Prams:
+        dir = dataset dir
+        labels = labels to train on
+        Frame Time = 1/the number of frames per second
+        wavLength = length in seconds for the wav file to be shortened/snipped (or extended) to
+        featureType = 0 - centroids
+                      1 - Zero Crossing Rate
+                      2 - centroids + Zero Crossing Rate
+    """
     dataVector = []
     labelVector = []
-    for label in labels :
-        for file in get_wav_files(dir, label) :
-            centroids = fe.wav_to_spectral_centroid(dir + "/" + label + "/" + file, frameSize)
-            zcr = fe.wav_to_ZCR(dir + "/" + label + "/" + file, frameSize)
-            dataVector.append(centroids + zcr)
-            labelVector.append(label)
+    for label in labels:
+        for file in get_wav_files(dir, label):
+            try:
+                if featureType == 0:
+                    centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    dataVector.append(centroids)
+                elif featureType == 1:
+                    zcr = fe.wav_to_ZCR(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    dataVector.append(zcr)
+                elif featureType == 2:
+                    centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    zcr = fe.wav_to_ZCR(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    dataVector.append(centroids + zcr)
+                else:
+                    raise Exception("Error: Not valid feature ID")
+                labelVector.append(label)
+            except Exception as error:
+                print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data(os.path.join(dirname, "Data/ESC-50"), ["glass_breaking", "siren"], 0.05) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = prepare_input_data(os.path.join(dirname, "Data/ESC-50"), ["glass_breaking", "siren"], 0.05, 3, 0) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 

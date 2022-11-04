@@ -27,18 +27,37 @@ import FeatureExtractor as fe
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
 
-def prepare_input_data(dir, labels, frameTime) :
+def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
+    """Extract the feature vectors from the WAV files
+    Prams:
+        dir = dataset dir
+        labels = labels to train on
+        Frame Time = 1/the number of frames per second
+        wavLength = length in seconds for the wav file to be shortened/snipped (or extended) to
+        featureType = 0 - centroids
+                      1 - Zero Crossing Rate
+                      2 - centroids + Zero Crossing Rate
+    """
     dataFolds = []
     labelFolds = []
-    for i in range(1, 11) :
+    for i in range(1, 11):
         dataVector = []
         labelVector = []
-        for label in labels :
-            for file in get_wav_files(dir + "/fold" + str(i), label) :
+        for label in labels:
+            for file in get_wav_files(dir + "/fold" + str(i), label):
                 try:
-                    centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, 3)
-                    #zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, 3)
-                    dataVector.append(centroids)# + zcr)
+                    if featureType == 0:
+                        centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
+                        dataVector.append(centroids)
+                    elif featureType == 1:
+                        zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
+                        dataVector.append(zcr)
+                    elif featureType == 2:
+                        centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
+                        zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
+                        dataVector.append(centroids + zcr)
+                    else:
+                        raise Exception("Error: Not valid feature ID")
                     labelVector.append(label)
                 except Exception as error:
                     print('Caught this error: ' + repr(error))
@@ -46,14 +65,14 @@ def prepare_input_data(dir, labels, frameTime) :
         labelFolds.append(labelVector)
     return (dataFolds, labelFolds)
 
-(X1, Y1) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["drilling"], 0.068)
-(X2, Y2) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["gun_shot"], 0.068)
-(X3, Y3) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["siren"], 0.068)
-(X4, Y4) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["children_playing"], 0.068)
-(X5, Y5) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["car_horn"], 0.068)
-(X6, Y6) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["air_conditioner"], 0.068)
-(X7, Y7) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["engine_idling"], 0.068)
-(X8, Y8) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["street_music"], 0.068)
+(X1, Y1) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["drilling"], 0.068, 3, 0)
+(X2, Y2) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["gun_shot"], 0.068, 3, 0)
+(X3, Y3) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["siren"], 0.068, 3, 0)
+(X4, Y4) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["children_playing"], 0.068, 3, 0)
+(X5, Y5) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["car_horn"], 0.068, 3, 0)
+(X6, Y6) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["air_conditioner"], 0.068, 3, 0)
+(X7, Y7) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["engine_idling"], 0.068, 3, 0)
+(X8, Y8) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["street_music"], 0.068, 3, 0)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]
