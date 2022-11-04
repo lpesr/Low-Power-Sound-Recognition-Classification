@@ -18,7 +18,9 @@ import pickle
 import sys
 import time
 
-sys.path.insert(1, '../FeatureExtractor')
+dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import FeatureExtractor as fe
 
 def get_wav_files(dir, label) :
@@ -35,7 +37,7 @@ def prepare_input_data(dir, labels, frameSize) :
             labelVector.append(label)
     return (dataVector, labelVector)
 
-(X, Y) = prepare_input_data("../../Data/ESC-50", ["glass_breaking", "siren"], 0.05) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = prepare_input_data(os.path.join(dirname, "Data/ESC-50"), ["glass_breaking", "siren"], 0.05) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 
@@ -99,7 +101,7 @@ for j in range(len(classifiers)):
         results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
         
         i += 1
-        totalTime += et - st
+        totalTime += (et - st) / len(y_test)
 
     p = pickle.dumps(clf)
-    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), format(sys.getsizeof(p) / 1000, ".3f"), format((totalTime / 1000) / (i * len(X_test)), ".3f")))
+    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), format(sys.getsizeof(p) / 1000, ".3f"), format((totalTime / 1000) / i, ".3f")))

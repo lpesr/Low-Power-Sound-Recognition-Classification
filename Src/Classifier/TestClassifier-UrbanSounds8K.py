@@ -45,7 +45,7 @@ def prepare_input_data(dir, labels, frameTime) :
         labelFolds.append(labelVector)
     return (dataFolds, labelFolds)
 
-(dataFolds, labelFolds) = prepare_input_data("../../Data/UrbanSounds8K", ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling"], 0.068)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(dataFolds, labelFolds) = prepare_input_data(os.path.join(dirname, "Data/UrbanSounds8K"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling"], 0.068)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 
@@ -100,7 +100,7 @@ for j in range(len(classifiers)):
         #Caculate the F1 score and store it
         results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
         
-        totalTime += et - st
+        totalTime += (et - st) / len(y_test)
 
     p = pickle.dumps(clf)
-    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), format(sys.getsizeof(p) / 1000, ".3f"), format((totalTime / 1000) / (i * len(X_test)), ".3f")))
+    print((names[j], format(sum(map(float, results[j][:])) / len(results[j]), ".3f"), format(sys.getsizeof(p) / 1000, ".3f"), format((totalTime / 10000), ".3f")))

@@ -121,11 +121,11 @@ for j in range(len(classifiers)):
             results[i] = f1_score(y_test, preditctions, average='macro')
             
             i += 1
-            totalTime += et - st
+            totalTime += (et - st) / len(y_train)
 
         p = pickle.dumps(clf)
         fScores += format(sum(results) / len(results), ".3f") + " & "
         memSize += format(sys.getsizeof(p) / 1000, ".3f") + " & "
-        elapsedTime += format((totalTime / 1000) / (i * len(X_test)), ".3f") + " & "
+        elapsedTime += format((totalTime / 1000) / i, ".3f") + " & "
 
     print(names[j] + " & " + fScores + memSize + elapsedTime[:-3] + "\\\\")
