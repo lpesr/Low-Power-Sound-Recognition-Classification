@@ -21,49 +21,7 @@ import time
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
-import FeatureExtractor as fe
-
-def get_wav_files(dir, label) :
-    return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
-
-def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
-    """Extract the feature vectors from the WAV files
-    Prams:
-        dir = dataset dir
-        labels = labels to train on
-        Frame Time = 1/the number of frames per second
-        wavLength = length in seconds for the wav file to be shortened/snipped (or extended) to
-        featureType = 0 - centroids
-                      1 - Zero Crossing Rate
-                      2 - centroids + Zero Crossing Rate
-    """
-    dataFolds = []
-    labelFolds = []
-    for i in range(1, 11):
-        dataVector = []
-        labelVector = []
-        for label in labels:
-            for file in get_wav_files(dir + "/fold" + str(i), label):
-                try:
-                    if featureType == 0:
-                        centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        dataVector.append(centroids)
-                    elif featureType == 1:
-                        zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        dataVector.append(zcr)
-                    elif featureType == 2:
-                        centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        dataVector.append(centroids + zcr)
-                    else:
-                        raise Exception("Error: Not valid feature ID")
-                    labelVector.append(label)
-                except Exception as error:
-                    print('Caught this error: ' + repr(error))
-        dataFolds.append(dataVector)
-        labelFolds.append(labelVector)
-    return (dataFolds, labelFolds)
-
+import DataPrep as dp
 
 def train_classifier(labels, classifier, frameTime, folds, wavLength, featureType):
     """Train and return a given classifier
@@ -82,7 +40,7 @@ def train_classifier(labels, classifier, frameTime, folds, wavLength, featureTyp
         using all of the folds but the 10th fold. The WAV files would also be cut to 3 seconds long and
         trained on spectral centroids
     """
-    (dataFolds, labelFolds) = prepare_input_data(os.path.join(dirname, "Data/UrbanSounds8K"), labels, frameTime, wavLength, featureType)
+    (dataFolds, labelFolds) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "Data/UrbanSounds8K"), labels, frameTime, wavLength, featureType)
 
     #Normalize the data
     scaler = MinMaxScaler()
@@ -103,4 +61,4 @@ def train_classifier(labels, classifier, frameTime, folds, wavLength, featureTyp
 
     return clf
 
-#train_classifier(["drilling", "gun_shot", "siren"], GaussianNB(), 0.05, [1,2,3,4,5,6,7,8], 3, 0)
+train_classifier(["drilling", "gun_shot", "siren"], GaussianNB(), 0.05, [1,2,3,4,5,6,7,8], 3, 0)

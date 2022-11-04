@@ -22,57 +22,16 @@ import time
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
-import FeatureExtractor as fe
+import DataPrep as dp
 
-def get_wav_files(dir, label) :
-    return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
-
-def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
-    """Extract the feature vectors from the WAV files
-    Prams:
-        dir = dataset dir
-        labels = labels to train on
-        Frame Time = 1/the number of frames per second
-        wavLength = length in seconds for the wav file to be shortened/snipped (or extended) to
-        featureType = 0 - centroids
-                      1 - Zero Crossing Rate
-                      2 - centroids + Zero Crossing Rate
-    """
-    dataFolds = []
-    labelFolds = []
-    for i in range(1, 11):
-        dataVector = []
-        labelVector = []
-        for label in labels:
-            for file in get_wav_files(dir + "/fold" + str(i), label):
-                try:
-                    if featureType == 0:
-                        centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        dataVector.append(centroids)
-                    elif featureType == 1:
-                        zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        dataVector.append(zcr)
-                    elif featureType == 2:
-                        centroids = fe.wav_to_spectral_centroid(dir  + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        zcr = fe.wav_to_ZCR(dir + "/fold" + str(i) + "/" + label + "/" + file, frameTime, wavLength)
-                        dataVector.append(centroids + zcr)
-                    else:
-                        raise Exception("Error: Not valid feature ID")
-                    labelVector.append(label)
-                except Exception as error:
-                    print('Caught this error: ' + repr(error))
-        dataFolds.append(dataVector)
-        labelFolds.append(labelVector)
-    return (dataFolds, labelFolds)
-
-(X1, Y1) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["drilling"], 0.068, 3, 0)
-(X2, Y2) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["gun_shot"], 0.068, 3, 0)
-(X3, Y3) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["siren"], 0.068, 3, 0)
-(X4, Y4) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["children_playing"], 0.068, 3, 0)
-(X5, Y5) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["car_horn"], 0.068, 3, 0)
-(X6, Y6) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["air_conditioner"], 0.068, 3, 0)
-(X7, Y7) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["engine_idling"], 0.068, 3, 0)
-(X8, Y8) = prepare_input_data(os.path.join(dirname, "./Data/UrbanSounds8K"), ["street_music"], 0.068, 3, 0)
+(X1, Y1) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["drilling"], 0.068, 3, 0)
+(X2, Y2) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["gun_shot"], 0.068, 3, 0)
+(X3, Y3) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["siren"], 0.068, 3, 0)
+(X4, Y4) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["children_playing"], 0.068, 3, 0)
+(X5, Y5) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["car_horn"], 0.068, 3, 0)
+(X6, Y6) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["air_conditioner"], 0.068, 3, 0)
+(X7, Y7) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["engine_idling"], 0.068, 3, 0)
+(X8, Y8) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["street_music"], 0.068, 3, 0)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]
@@ -100,9 +59,6 @@ names = [
     "Neural Net",
     "Naive Bayes",
 ]
-
-#Create a results matrix
-i, j = len(X1), len(classifiers)
 
 print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (uS)]  ")
 
