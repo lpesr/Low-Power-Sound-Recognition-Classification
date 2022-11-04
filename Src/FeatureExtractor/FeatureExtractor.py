@@ -1,9 +1,6 @@
-from cmath import log10
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 from scipy.io import wavfile
-import librosa
 
 def plot_fft(filename) :                                                                     # plot the frequencies of a wav file
     samplerate, transform = wavfile.read(filename)
@@ -14,6 +11,25 @@ def plot_fft(filename) :                                                        
     plt.ylabel("Hz")
     plt.show()
 
+def convert_to_single_band(audioData):
+    if len(audioData.shape) > 1 :
+        if audioData.shape[1] > 1 :
+            audioData = audioData[:,0]
+    return audioData
+
+def padd_and_snip_feature(feature, sampleRate, paddingSize, frameSize):
+    padding = round((paddingSize - len(feature) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize))
+    if padding > 0:
+        return feature + [0] * padding
+    else:
+        return feature[:round(paddingSize * (float(sampleRate) / float(frameSize)))]
+
+def get_wav_data(fileName, frameTime):
+    sampleRate, audioData = wavfile.read(fileName)
+    frameSize = int(sampleRate * frameTime)
+    audioData = convert_to_single_band(audioData)
+    return (sampleRate, audioData, frameSize, audioData)
+
 def calculate_spectral_centroid(data, sampleRate) :
     magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
     length = len(data)                    
@@ -22,39 +38,22 @@ def calculate_spectral_centroid(data, sampleRate) :
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
 def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10) :
-    sampleRate, spectralDencity = wavfile.read(fileName)
-    frameSize = int(sampleRate * frameTime)
+    (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
 
-    if len(spectralDencity.shape) > 1 :
-        if spectralDencity.shape[1] > 1 :
-            spectralDencity = spectralDencity[:,0]
+    frames = [audioData[i:i+(frameSize)] for i in range(0, len(audioData), (frameSize))]    # group audioData into frames
+    centroids = [calculate_spectral_centroid(frame, sampleRate) for frame in frames]        # return list of spectral centroids
 
-    frames = [spectralDencity[i:i+(frameSize)] for i in range(0, len(spectralDencity), (frameSize))]   # group spectralDencity into frames
-    centroids = [calculate_spectral_centroid(frame, sampleRate) for frame in frames]                   # return list of spectral centroids
-    padding = round((paddingSize - len(centroids) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize))
-    if padding > 0:
-        return centroids + [0] * padding
-    else:
-        return centroids[:round(paddingSize * (float(sampleRate) / float(frameSize)))]
+    return padd_and_snip_feature(centroids, sampleRate, paddingSize, frameSize)
 
-def wav_to_ZCR(fileName, frameTime, paddingSize = 10) :
-    sampleRate, spectralDencity = wavfile.read(fileName)
-    frameSize = int(sampleRate * frameTime)
+def wav_to_ZCR(fileName, frameTime, paddingSize = 10):
+    (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
 
-    if len(spectralDencity.shape) > 1 :
-        if spectralDencity.shape[1] > 1 :
-            spectralDencity = spectralDencity[:,0]
-
-    zeroCrossings = np.nonzero(np.diff(spectralDencity > 0))[0]
-    zcr = [0] * int(len(spectralDencity) / frameSize + 1)
+    zeroCrossings = np.nonzero(np.diff(audioData > 0))[0]
+    zcr = [0] * int(len(audioData) / frameSize + 1)
     for point in zeroCrossings :
         zcr[int(point / frameSize)] += 1
 
-    padding = round((paddingSize - len(zcr) * float(frameSize) / float(sampleRate)) * float(sampleRate) / float(frameSize)) 
-    if padding > 0:
-        return zcr + [0] * padding
-    else:
-        return zcr[:round(paddingSize * (float(sampleRate) / float(frameSize)))]
+    return padd_and_snip_feature(zcr, sampleRate, paddingSize, frameSize)
 
 def wav_threshold_normalization(wav, threshold) :
     index = next(x[0] for x in enumerate(wav) if x[1] > threshold)
