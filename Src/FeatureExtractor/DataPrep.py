@@ -17,6 +17,7 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
         featureType = 0 - centroids
                       1 - Zero Crossing Rate
                       2 - centroids + Zero Crossing Rate
+                      3 - centroid bands
     """
     dataVector = []
     labelVector = []
@@ -33,6 +34,9 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
                     centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     zcr = fe.wav_to_ZCR(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     dataVector.append(centroids + zcr)
+                elif featureType == 3:
+                    centroids = fe.wav_to_spectral_centroid_bands(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    dataVector.append(centroids)
                 else:
                     raise Exception("Error: Not valid feature ID")
                 labelVector.append(label)

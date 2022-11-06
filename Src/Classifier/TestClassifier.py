@@ -23,7 +23,7 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 
-(X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/ESC-50"), ["glass_breaking", "siren"], 0.05, 3, 0) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/ESC-50"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.05, 2, 3) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 X = np.array(X)
 Y = np.array(Y)
 
@@ -59,8 +59,8 @@ i, j = numKFoldSplits * numKFoldRep, len(classifiers)
 results = [[0 for x in range(i)] for y in range(j)] 
 
 #Normalize the data
-scaler = MinMaxScaler()
-X = scaler.fit_transform(X)
+#scaler = MinMaxScaler()
+#X = scaler.fit_transform(X)
 
 print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (uS)]  ")
 

@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 
-def plot_fft(filename) :                                                                     # plot the frequencies of a wav file
-    samplerate, transform = wavfile.read(filename)
+def plot_fft(filename):
+    _, transform = wavfile.read(filename)
 
     plt.plot(np.fft.rfft(transform))
     plt.legend()
@@ -30,14 +30,14 @@ def get_wav_data(fileName, frameTime):
     audioData = convert_to_single_band(audioData)
     return (sampleRate, audioData, frameSize, audioData)
 
-def calculate_spectral_centroid(data, sampleRate) :
+def calculate_spectral_centroid(data, sampleRate):
     magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
     length = len(data)                    
     freqs = np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1])                    # positive frequencies
     sums = np.sum(magnitudes)
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
-def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10) :
+def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
 
     frames = [audioData[i:i+(frameSize)] for i in range(0, len(audioData), (frameSize))]    # group audioData into frames
@@ -55,6 +55,35 @@ def wav_to_ZCR(fileName, frameTime, paddingSize = 10):
 
     return padd_and_snip_feature(zcr, sampleRate, paddingSize, frameSize)
 
-def wav_threshold_normalization(wav, threshold) :
+def wav_threshold_normalization(wav, threshold):
     index = next(x[0] for x in enumerate(wav) if x[1] > threshold)
     return wav[index:] + [0] * index
+
+def wav_to_spectral_centroid_bands(fileName, frameTime, paddingSize = 10):
+    (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
+
+    frames = [audioData[i:i+(frameSize)] for i in range(0, len(audioData), (frameSize))]    # group audioData into frames
+    centroids = []
+    for frame in frames:
+        centroidBands = []
+        for f in range(1, len([50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000])):
+            centroidBands.append(calculate_spectral_centroid_band(frame, sampleRate, f))
+        centroids.append(padd_and_snip_feature(centroidBands, sampleRate, paddingSize, frameSize))
+
+    result = []
+    for f in range(0, len([50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000])):
+        for centroid in centroids:
+            result.append(centroid[f])
+
+    return result
+
+def calculate_spectral_centroid_band(data, sampleRate, band):
+    length = len(data) 
+    bands = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000]
+    fft = list(zip(np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1]), np.abs(np.fft.rfft(data))))
+    out = list(zip(*[(f, mag) for (f, mag) in fft if f > bands[band - 1] and f <= bands[band]])) #(freqs, magnitudes)
+    if len(out) == 0:
+        return 0
+    (freqs, magnitudes) = np.array(out[0]), np.array(out[1])
+    sums = np.sum(magnitudes)
+    return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
