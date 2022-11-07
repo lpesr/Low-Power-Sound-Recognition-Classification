@@ -59,8 +59,8 @@ i, j = numKFoldSplits * numKFoldRep, len(classifiers)
 results = [[0 for x in range(i)] for y in range(j)] 
 
 #Normalize the data
-#scaler = MinMaxScaler()
-#X = scaler.fit_transform(X)
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X)
 
 print("  [Algorithm]----[F-Score]----[Memory Size (KB)]----[Average Elapsed Time (uS)]  ")
 

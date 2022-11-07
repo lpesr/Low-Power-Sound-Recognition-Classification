@@ -62,16 +62,18 @@ def wav_threshold_normalization(wav, threshold):
 def wav_to_spectral_centroid_bands(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
 
-    frames = [audioData[i:i+(frameSize)] for i in range(0, len(audioData), (frameSize))]    # group audioData into frames
+    frames = [audioData[i:i+(frameSize)] for i in range(0, min(len(audioData), int(1 / frameTime * paddingSize * frameSize)), (frameSize))]    # group audioData into frames
+    if len(frames) < int(sampleRate / frameSize * paddingSize):
+        frames += [[0]] * int((sampleRate / frameSize * paddingSize) - len(frames))
     centroids = []
     for frame in frames:
         centroidBands = []
         for f in range(1, len([50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000])):
             centroidBands.append(calculate_spectral_centroid_band(frame, sampleRate, f))
-        centroids.append(padd_and_snip_feature(centroidBands, sampleRate, paddingSize, frameSize))
+        centroids.append(centroidBands)
 
     result = []
-    for f in range(0, len([50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000])):
+    for f in range(0, len(centroids[0])):
         for centroid in centroids:
             result.append(centroid[f])
 
