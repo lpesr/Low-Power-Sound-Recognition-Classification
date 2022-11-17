@@ -24,14 +24,14 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 
-(X1, Y1) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["glass_breaking"], 0.02, 3, 0)
-(X2, Y2) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["siren"], 0.02, 3, 0)
-(X3, Y3) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["hand_saw"], 0.02, 3, 0)
-(X4, Y4) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["crackling_fire"], 0.02, 3, 0)
-(X5, Y5) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["clapping"], 0.02, 3, 0)
-(X6, Y6) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["crying_baby"], 0.02, 3, 0)
-(X7, Y7) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["vacuum_cleaner"], 0.02, 3, 0)
-(X8, Y8) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["engine"], 0.02, 3, 0)
+(X1, Y1) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["glass_breaking"], 0.02, 2, 4)
+(X2, Y2) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["siren"], 0.02, 2, 4)
+(X3, Y3) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["hand_saw"], 0.02, 2, 4)
+(X4, Y4) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["crackling_fire"], 0.02, 2, 4)
+(X5, Y5) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["clapping"], 0.02, 2, 4)
+(X6, Y6) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["crying_baby"], 0.02, 2, 4)
+(X7, Y7) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["vacuum_cleaner"], 0.02, 2, 4)
+(X8, Y8) = dp.prepare_input_data(os.path.join(dirname, "Data\ESC-50"), ["engine"], 0.02, 2, 4)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]

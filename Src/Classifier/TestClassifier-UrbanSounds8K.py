@@ -23,7 +23,7 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 
-(dataFolds, labelFolds) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "Data/UrbanSounds8K"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn"], 0.05, 1.5, 3)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(dataFolds, labelFolds) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "Data/UrbanSounds8K"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn"], 0.05, 0.25, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 

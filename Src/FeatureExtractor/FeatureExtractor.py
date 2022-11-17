@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
+import librosa as lb
 
 def plot_fft(filename):
     _, transform = wavfile.read(filename)
@@ -28,7 +29,7 @@ def get_wav_data(fileName, frameTime):
     sampleRate, audioData = wavfile.read(fileName)
     frameSize = int(sampleRate * frameTime)
     audioData = convert_to_single_band(audioData)
-    return (sampleRate, audioData, frameSize, audioData)
+    return (sampleRate, audioData, frameSize)
 
 def calculate_spectral_centroid(data, sampleRate):
     magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
@@ -38,7 +39,7 @@ def calculate_spectral_centroid(data, sampleRate):
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
 def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10):
-    (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
+    (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
 
     frames = [audioData[i:i+(frameSize)] for i in range(0, len(audioData), (frameSize))]    # group audioData into frames
     centroids = [calculate_spectral_centroid(frame, sampleRate) for frame in frames]        # return list of spectral centroids
@@ -46,7 +47,7 @@ def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10):
     return padd_and_snip_feature(centroids, sampleRate, paddingSize, frameSize)
 
 def wav_to_ZCR(fileName, frameTime, paddingSize = 10):
-    (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
+    (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
 
     zeroCrossings = np.nonzero(np.diff(audioData > 0))[0]
     zcr = [0] * int(len(audioData) / frameSize + 1)
@@ -60,7 +61,7 @@ def wav_threshold_normalization(wav, threshold):
     return wav[index:] + [0] * index
 
 def wav_to_spectral_centroid_bands(fileName, frameTime, paddingSize = 10):
-    (sampleRate, audioData, frameSize, audioData) = get_wav_data(fileName, frameTime)
+    (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
 
     frames = [audioData[i:i+(frameSize)] for i in range(0, min(len(audioData), int(1 / frameTime * paddingSize * frameSize)), (frameSize))]    # group audioData into frames
     if len(frames) < int(sampleRate / frameSize * paddingSize):
@@ -68,7 +69,7 @@ def wav_to_spectral_centroid_bands(fileName, frameTime, paddingSize = 10):
     centroids = []
     for frame in frames:
         centroidBands = []
-        for f in range(1, len([50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000])):
+        for f in range(1, len([0, 500, 2500, 5000, 10000, 20000, 100000])):
             centroidBands.append(calculate_spectral_centroid_band(frame, sampleRate, f))
         centroids.append(centroidBands)
 
@@ -81,7 +82,7 @@ def wav_to_spectral_centroid_bands(fileName, frameTime, paddingSize = 10):
 
 def calculate_spectral_centroid_band(data, sampleRate, band):
     length = len(data) 
-    bands = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 100000]
+    bands = [0, 500, 2500, 5000, 10000, 20000, 100000]
     fft = list(zip(np.abs(np.fft.fftfreq(length, 1.0/sampleRate)[:length//2+1]), np.abs(np.fft.rfft(data))))
     out = list(zip(*[(f, mag) for (f, mag) in fft if f > bands[band - 1] and f <= bands[band]])) #(freqs, magnitudes)
     if len(out) == 0:
@@ -89,3 +90,18 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
     (freqs, magnitudes) = np.array(out[0]), np.array(out[1])
     sums = np.sum(magnitudes)
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
+
+def wav_to_MFCCs(fileName, frameTime, paddingSize = 10):
+    audioData, sampleRate = lb.load(fileName)
+    #(sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
+    jump = 0.5
+
+    return np.array(lb.feature.mfcc(y=audioData[int(sampleRate * jump):int(paddingSize * sampleRate + sampleRate * jump)], sr=sampleRate)).flatten()
+
+    frames = [audioData[i:i+(frameSize)] for i in range(0, min(len(audioData), int(1 / frameTime * paddingSize * frameSize)), (frameSize))]    # group audioData into frames
+    if len(frames) < int(sampleRate / frameSize * paddingSize):
+        frames += [[0]] * int((sampleRate / frameSize * paddingSize) - len(frames))
+    
+    centroids = [lb.feature.mfcc(frame, sr=sampleRate) for frame in frames]
+
+    return centroids
