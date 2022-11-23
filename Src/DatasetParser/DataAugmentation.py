@@ -39,4 +39,7 @@ def random_gain(data, min_factor = 0.1, max_factor = 0.12):
     gain_rate = np.random.uniform(min_factor, max_factor)
     return data * gain_rate
 
+def invert_polarity(data):
+    return data * -1
+
 compress_dataset(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
