@@ -23,31 +23,33 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 
-(X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/ESC-50"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.05, 0.25, 4) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+def plot_features(X, Y):
+    buffer = list(zip(X, Y))
+    import matplotlib.pyplot as plt
+
+    for point in buffer:
+        color = ''
+        if point[1] == "glass_breaking":
+            color = 'c'
+        elif point[1] == "siren":
+            color = 'm'
+        elif point[1] == "hand_saw":
+            color = 'b'
+        elif point[1] == "vacuum_cleaner":
+            color = 'r'
+        elif point[1] == "crackling_fire":
+            color = 'g'
+        plt.plot(point[0], color)
+
+    plt.legend()
+    plt.xlabel("Time [s]")
+    plt.ylabel("Hz")
+    plt.show()
+
+(X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.05, 0.25, 4) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 buffer = list(zip(X, Y))
 X = np.array(X)
 Y = np.array(Y)
-
-import matplotlib.pyplot as plt
-
-for point in buffer:
-    color = ''
-    if point[1] == "glass_breaking":
-        color = 'c'
-    elif point[1] == "siren":
-        color = 'm'
-    elif point[1] == "hand_saw":
-        color = 'b'
-    elif point[1] == "vacuum_cleaner":
-        color = 'r'
-    elif point[1] == "crackling_fire":
-        color = 'g'
-    plt.plot(point[0], color)
-
-plt.legend()
-plt.xlabel("Time [s]")
-plt.ylabel("Hz")
-plt.show()
 
 dirname = os.path.dirname(__file__)
 
