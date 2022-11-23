@@ -1,5 +1,6 @@
 import os
 import sys
+import numpy as np
 import librosa as lb
 import soundfile as sf
 
@@ -29,5 +30,9 @@ def compress_dataset(datasetDir, outputDir, labels, targetSamplerate, targetLeng
         for file in dp.get_wav_files(datasetDir, label):
             compressedWav = compress_wav_file(datasetDir + "/" + label + "/" + file, targetSamplerate, targetLength)
             sf.write(outputDir + "/" + label + "/" + file, compressedWav, targetSamplerate, format='wav')
+
+def add_white_noise(data, noise_percentage_factor):
+    noise = np.random.normal(0, data.std(), data.size)
+    return data + noise * noise_percentage_factor
 
 compress_dataset(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
