@@ -96,7 +96,13 @@ def wav_to_MFCCs(fileName, frameTime, paddingSize = 10):
     #(sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
     jump = 0.5
 
-    return np.array(lb.feature.mfcc(y=audioData[int(sampleRate * jump):int(paddingSize * sampleRate + sampleRate * jump)], sr=sampleRate)).flatten()
+    beginning = int(sampleRate * jump)
+    end = int(paddingSize * sampleRate + sampleRate * jump)
+
+    if len(audioData) < end:
+        audioData = audioData + [0] * (end - len(audioData))
+
+    return np.array(lb.feature.mfcc(y=audioData[beginning:end], sr=sampleRate)).flatten()
 
     frames = [audioData[i:i+(frameSize)] for i in range(0, min(len(audioData), int(1 / frameTime * paddingSize * frameSize)), (frameSize))]    # group audioData into frames
     if len(frames) < int(sampleRate / frameSize * paddingSize):
