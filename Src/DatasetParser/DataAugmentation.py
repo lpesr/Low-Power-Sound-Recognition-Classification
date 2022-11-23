@@ -20,7 +20,7 @@ def set_audio_length(singleBandWav, samplerate, length):
 def compress_wav_file(filename, targetSamplerate, targetLength):
     audioData, sampleRate = lb.load(filename)
     audioData = set_audio_length(audioData, sampleRate, targetLength)
-    return lb.resample(audioData, sampleRate, targetSamplerate)
+    return lb.resample(audioData, orig_sr=sampleRate, target_sr=targetSamplerate)
 
 def compress_dataset(datasetDir, outputDir, labels, targetSamplerate, targetLength):
     os.mkdir(outputDir)
