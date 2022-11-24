@@ -39,7 +39,7 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
                     centroids = fe.wav_to_spectral_centroid_bands(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     dataVector.append(centroids)
                 elif featureType == 4:
-                    mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, frameTime, wavLength, jump=0)
                     #for mfcc in mfccs:
                     #    dataVector.append(mfcc)
                     dataVector.append(mfccs)

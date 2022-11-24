@@ -8,22 +8,34 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
+import FeatureExtractor as fe
 
 def set_audio_length(singleBandWav, samplerate, length):
     numOfSamples = int(samplerate * length)
     if len(singleBandWav) > numOfSamples:
         return singleBandWav[:numOfSamples]
     elif len(singleBandWav) < numOfSamples:
-        return singleBandWav + [0] * int(numOfSamples - len(singleBandWav))
+        return np.append(singleBandWav, [0.0] * int(numOfSamples - len(singleBandWav)))
     else:
         return singleBandWav
 
 def compress_wav_file(filename, targetSamplerate, targetLength):
     audioData, sampleRate = lb.load(filename)
+    audioData = fe.convert_to_single_band(audioData)
     audioData = lb.resample(audioData, orig_sr=sampleRate, target_sr=targetSamplerate)
     return set_audio_length(audioData, sampleRate, targetLength)
 
-def compress_dataset(datasetDir, outputDir, labels, targetSamplerate, targetLength):
+def compress_dataset_urbansounds8k(datasetDir, outputDir, labels, targetSamplerate, targetLength):
+    os.mkdir(outputDir)
+    for i in range(1, 11):
+        os.mkdir(outputDir + "/fold" + str(i))
+        for label in labels:
+            os.mkdir(outputDir + "/fold" + str(i) + "/" + label)
+            for file in dp.get_wav_files(datasetDir + "/fold" + str(i), label):
+                compressedWav = compress_wav_file(datasetDir + "/fold" + str(i) + "/" + label + "/" + file, targetSamplerate, targetLength)
+                sf.write(outputDir + "/fold" + str(i) + "/" + label + "/" + file, compressedWav, targetSamplerate, format='wav')
+
+def compress_dataset_esc(datasetDir, outputDir, labels, targetSamplerate, targetLength):
     os.mkdir(outputDir)
     for label in labels:
         os.mkdir(outputDir + "/" + label)
@@ -42,6 +54,10 @@ def random_gain(data, min_factor = 0.1, max_factor = 0.12):
 def invert_polarity(data):
     return data * -1
 
+def apply_data_augmentation_urbansounds8k(dir, labels):
+    for i in range(1, 11):
+        apply_data_augmentation(dir + "/fold" + str(i), labels)
+
 def apply_data_augmentation(dir, labels):
     for label in labels:
         for file in dp.get_wav_files(dir, label):
@@ -56,5 +72,8 @@ def apply_data_augmentation(dir, labels):
             sf.write(outputBaseFilePath + "high.wav", lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=1), sampleRate, format='wav')
             sf.write(outputBaseFilePath + "low.wav", lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=-1), sampleRate, format='wav')
 
-compress_dataset(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
-apply_data_augmentation(os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"])
+#compress_dataset_esc(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
+#apply_data_augmentation(os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"])
+
+compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
+apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])

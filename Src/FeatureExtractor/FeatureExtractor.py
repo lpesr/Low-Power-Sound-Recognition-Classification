@@ -91,23 +91,13 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
     sums = np.sum(magnitudes)
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
-def wav_to_MFCCs(fileName, frameTime, paddingSize = 10):
+def wav_to_MFCCs(fileName, frameTime, paddingSize = 10, jump = 0.5):
     audioData, sampleRate = lb.load(fileName)
-    #(sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
-    jump = 0.5
 
     beginning = int(sampleRate * jump)
     end = int(paddingSize * sampleRate + sampleRate * jump)
 
     if len(audioData) < end:
-        audioData = audioData + [0] * int(end - len(audioData))
+        audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
 
     return np.array(lb.feature.mfcc(y=audioData[beginning:end], sr=sampleRate)).flatten()
-
-    frames = [audioData[i:i+(frameSize)] for i in range(0, min(len(audioData), int(1 / frameTime * paddingSize * frameSize)), (frameSize))]    # group audioData into frames
-    if len(frames) < int(sampleRate / frameSize * paddingSize):
-        frames += [[0]] * int((sampleRate / frameSize * paddingSize) - len(frames))
-    
-    centroids = [lb.feature.mfcc(frame, sr=sampleRate) for frame in frames]
-
-    return centroids
