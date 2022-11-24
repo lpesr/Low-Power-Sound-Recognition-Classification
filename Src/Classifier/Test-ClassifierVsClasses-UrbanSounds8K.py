@@ -24,14 +24,14 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 
-(X1, Y1) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["drilling"], 0.1, 2, 3)
-(X2, Y2) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["air_conditioner"], 0.1, 2, 3)
-(X3, Y3) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["siren"], 0.1, 2, 3)
-(X4, Y4) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["children_playing"], 0.1, 2, 3)
-(X5, Y5) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["car_horn"], 0.1, 2, 3)
-(X6, Y6) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["gun_shot"], 0.1, 2, 3)
-(X7, Y7) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["engine_idling"], 0.1, 2, 3)
-(X8, Y8) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8K"), ["street_music"], 0.1, 2, 3)
+(X1, Y1) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["drilling"], 0.1, 0.5, 4)
+(X2, Y2) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["air_conditioner"], 0.1, 0.5, 4)
+(X3, Y3) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["siren"], 0.1, 0.5, 4)
+(X4, Y4) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["children_playing"], 0.1, 0.5, 4)
+(X5, Y5) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["car_horn"], 0.1, 0.5, 4)
+(X6, Y6) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["gun_shot"], 0.1, 0.5, 4)
+(X7, Y7) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["engine_idling"], 0.1, 0.5, 4)
+(X8, Y8) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["street_music"], 0.1, 0.5, 4)
 
 data = [X1, X2, X3, X4, X5, X6, X7, X8]
 labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]

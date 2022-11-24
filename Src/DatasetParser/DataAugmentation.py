@@ -47,7 +47,7 @@ def add_white_noise(data, noise_percentage_factor = 0.1):
     noise = np.random.normal(0, data.std(), data.size)
     return data + noise * noise_percentage_factor
 
-def random_gain(data, min_factor = 0.1, max_factor = 0.12):
+def random_gain(data, min_factor = 0.5, max_factor = 1):
     gain_rate = np.random.uniform(min_factor, max_factor)
     return data * gain_rate
 
@@ -58,22 +58,40 @@ def apply_data_augmentation_urbansounds8k(dir, labels):
     for i in range(1, 11):
         apply_data_augmentation(dir + "/fold" + str(i), labels)
 
-def apply_data_augmentation(dir, labels):
+def apply_data_augmentation(dir, labels, length = 1):
     for label in labels:
         for file in dp.get_wav_files(dir, label):
             outputBaseFilePath = dir + "/" + label + "/" + file[:-4]
             audioData, sampleRate = lb.load(dir + "/" + label + "/" + file)
-            sf.write(outputBaseFilePath + "noise.wav", add_white_noise(audioData), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "random_gain.wav", random_gain(audioData), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "invert_polarity.wav", invert_polarity(audioData), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "invert_polarity.wav", invert_polarity(audioData), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "slow.wav", lb.effects.time_stretch(audioData, rate=0.5), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "fast.wav", lb.effects.time_stretch(audioData, rate=1.5), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "high.wav", lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=1), sampleRate, format='wav')
-            sf.write(outputBaseFilePath + "low.wav", lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=-1), sampleRate, format='wav')
+            augWavFiles = augmentation_pipeline(audioData, sampleRate)
+            for file in augWavFiles:
+                sf.write(outputBaseFilePath + file[1], set_audio_length(file[0], sampleRate, length), sampleRate, format='wav')
 
-#compress_dataset_esc(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
-#apply_data_augmentation(os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"])
+def augmentation_pipeline(audioData, sampleRate):
+    wavTimeStretchFiles = []
+    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.5), "-0.5speed"))
+    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.75), "-0.75speed"))
+    wavTimeStretchFiles.append((audioData, "-1speed"))
+    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.25), "-1.25speed"))
+    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.5), "-1.5speed"))
 
-compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
-apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])
+    wavPitchFiles = []
+    for file in wavTimeStretchFiles:
+        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-1), file[1] + "-dsift1"))
+        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-0.5), file[1] + "-dsift0.5"))
+        wavPitchFiles.append((file[0], file[1] + "-nosift"))
+        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=0.5), file[1] + "-usift0.5"))
+        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=1), file[1] + "-usift1"))
+    
+    wavFiles = []
+    for file in wavPitchFiles:
+        wavFiles.append((random_gain(add_white_noise(file[0])), file[1] + ".wav"))
+        wavFiles.append((random_gain(add_white_noise(invert_polarity(file[0]))), file[1] + "-inverted.wav"))
+
+    return wavFiles
+
+compress_dataset_esc(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
+apply_data_augmentation(os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"])
+
+#compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
+#apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])

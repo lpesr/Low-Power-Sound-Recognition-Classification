@@ -23,30 +23,30 @@ dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 
-(dataFolds, labelFolds) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "Data/UrbanSounds8K"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn"], 0.05, 0.25, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(dataFolds, labelFolds) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "./Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn"], 0.05, 0.25, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 
 #Define all of the classifiers to test
 classifiers = [
-    KNeighborsClassifier(10),
-    SVC(kernel="linear"),
+    #KNeighborsClassifier(10),
+    #SVC(kernel="linear"),
     SVC(kernel="rbf"),
-    SVC(kernel="sigmoid"),
+    #SVC(kernel="sigmoid"),
     DecisionTreeClassifier(max_depth=100),
     RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
-    MLPClassifier(max_iter=1000),
     GaussianNB(),
+    MLPClassifier(max_iter=1000),
 ]
 names = [
-    "Nearest Neighbors",
-    "Linear SVM",
+    #"Nearest Neighbors",
+    #Linear SVM",
     "RBF SVM",
-    "Sigmoid SVM",
+    #"Sigmoid SVM",
     "Decision Tree",
     "Random Forest",
-    "Neural Net",
     "Naive Bayes",
+    "Neural Net",
 ]
 
 #Create a results matrix

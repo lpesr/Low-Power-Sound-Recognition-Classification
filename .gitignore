@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 # Datasets
+Data/ESC-50-Compressed
 Data/UrbanSounds8k
 Data/UrbanSounds8k-Compressed
 
