@@ -28,14 +28,14 @@ def test_feature(dataset, labelsIDs, feature, numFolds = 5):
     sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
     import DataPrep as dp
 
-    (X1, Y1) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[0]], 0.02, 0.5, feature, numFolds)
-    (X2, Y2) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[1]], 0.02, 0.5, feature, numFolds)
-    (X3, Y3) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[2]], 0.02, 0.5, feature, numFolds)
-    (X4, Y4) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[3]], 0.02, 0.5, feature, numFolds)
-    (X5, Y5) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[4]], 0.02, 0.5, feature, numFolds)
-    (X6, Y6) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[5]], 0.02, 0.5, feature, numFolds)
-    (X7, Y7) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[6]], 0.02, 0.5, feature, numFolds)
-    (X8, Y8) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, dataset), [labelsIDs[7]], 0.02, 0.5, feature, numFolds)
+    (X1, Y1) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[0]], 0.02, 0.5, feature, numFolds)
+    (X2, Y2) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[1]], 0.02, 0.5, feature, numFolds)
+    (X3, Y3) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[2]], 0.02, 0.5, feature, numFolds)
+    (X4, Y4) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[3]], 0.02, 0.5, feature, numFolds)
+    (X5, Y5) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[4]], 0.02, 0.5, feature, numFolds)
+    (X6, Y6) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[5]], 0.02, 0.5, feature, numFolds)
+    (X7, Y7) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[6]], 0.02, 0.5, feature, numFolds)
+    (X8, Y8) = dp.prepare_input_data_with_folds(os.path.join(dirname, dataset), [labelsIDs[7]], 0.02, 0.5, feature, numFolds)
 
     data = [X1, X2, X3, X4, X5, X6, X7, X8]
     labels = [Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8]

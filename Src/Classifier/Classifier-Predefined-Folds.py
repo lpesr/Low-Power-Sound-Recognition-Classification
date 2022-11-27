@@ -40,7 +40,7 @@ def train_classifier(labels, classifier, frameTime, folds, wavLength, featureTyp
         using all of the folds but the 10th fold. The WAV files would also be cut to 3 seconds long and
         trained on spectral centroids
     """
-    (dataFolds, labelFolds) = dp.prepare_input_data_UrbanSounds8K(os.path.join(dirname, "Data/UrbanSounds8K"), labels, frameTime, wavLength, featureType)
+    (dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "Data/UrbanSounds8K"), labels, frameTime, wavLength, featureType)
 
     #Normalize the data
     scaler = MinMaxScaler()
