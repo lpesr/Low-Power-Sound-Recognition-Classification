@@ -25,9 +25,9 @@ def compress_wav_file(filename, targetSamplerate, targetLength):
     audioData = lb.resample(audioData, orig_sr=sampleRate, target_sr=targetSamplerate)
     return set_audio_length(audioData, sampleRate, targetLength)
 
-def compress_dataset_urbansounds8k(datasetDir, outputDir, labels, targetSamplerate, targetLength):
+def compress_dataset_folds(datasetDir, outputDir, labels, targetSamplerate, targetLength, nFolds=10):
     os.mkdir(outputDir)
-    for i in range(1, 11):
+    for i in range(1, nFolds + 1):
         os.mkdir(outputDir + "/fold" + str(i))
         for label in labels:
             os.mkdir(outputDir + "/fold" + str(i) + "/" + label)
@@ -54,8 +54,8 @@ def random_gain(data, min_factor = 0.5, max_factor = 1):
 def invert_polarity(data):
     return data * -1
 
-def apply_data_augmentation_urbansounds8k(dir, labels):
-    for i in range(1, 11):
+def apply_data_augmentation_folds(dir, labels, nFolds):
+    for i in range(1, nFolds + 1):
         apply_data_augmentation(dir + "/fold" + str(i), labels)
 
 def apply_data_augmentation(dir, labels, length = 1):
@@ -70,17 +70,17 @@ def apply_data_augmentation(dir, labels, length = 1):
 def augmentation_pipeline(audioData, sampleRate):
     wavTimeStretchFiles = []
     wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.5), "-0.5speed"))
-    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.75), "-0.75speed"))
+    #wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.75), "-0.75speed"))
     wavTimeStretchFiles.append((audioData, "-1speed"))
-    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.25), "-1.25speed"))
+    #wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.25), "-1.25speed"))
     wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.5), "-1.5speed"))
 
     wavPitchFiles = []
     for file in wavTimeStretchFiles:
         wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-1), file[1] + "-dsift1"))
-        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-0.5), file[1] + "-dsift0.5"))
+        #wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-0.5), file[1] + "-dsift0.5"))
         wavPitchFiles.append((file[0], file[1] + "-nosift"))
-        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=0.5), file[1] + "-usift0.5"))
+        #wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=0.5), file[1] + "-usift0.5"))
         wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=1), file[1] + "-usift1"))
     
     wavFiles = []
@@ -90,8 +90,8 @@ def augmentation_pipeline(audioData, sampleRate):
 
     return wavFiles
 
-compress_dataset_esc(os.path.join(dirname, "Data/ESC-50"), os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1)
-apply_data_augmentation(os.path.join(dirname, "Data/ESC-50-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"])
+#compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds10-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)
+apply_data_augmentation_folds(os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 10)
 
 #compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
 #apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])

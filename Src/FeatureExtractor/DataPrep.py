@@ -50,10 +50,10 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
                 print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)
 
-def prepare_input_data_UrbanSounds8K(dir, labels, frameTime, wavLength, featureType):
+def prepare_input_data_UrbanSounds8K(dir, labels, frameTime, wavLength, featureType, numFolds=10):
     dataFolds = []
     labelFolds = []
-    for i in range(1, 11):
+    for i in range(1, numFolds + 1):
         (dataVector, labelVector) = prepare_input_data(dir + "/fold" + str(i), labels, frameTime, wavLength, featureType)
         dataFolds.append(dataVector)
         labelFolds.append(labelVector)
