@@ -61,37 +61,34 @@ def apply_data_augmentation_folds(dir, labels, nFolds):
 def apply_data_augmentation(dir, labels, length = 1):
     for label in labels:
         for file in dp.get_wav_files(dir, label):
-            outputBaseFilePath = dir + "/" + label + "/" + file[:-4]
+            outputBaseFilePath = dir + "/" + label# + "/"# + file[:-4]
             audioData, sampleRate = lb.load(dir + "/" + label + "/" + file)
-            augWavFiles = augmentation_pipeline(audioData, sampleRate)
-            for file in augWavFiles:
-                sf.write(outputBaseFilePath + file[1], set_audio_length(file[0], sampleRate, length), sampleRate, format='wav')
+            augmentation_pipeline(audioData, sampleRate, file[:-4], outputBaseFilePath)
 
-def augmentation_pipeline(audioData, sampleRate):
-    wavTimeStretchFiles = []
-    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.5), "-0.5speed"))
-    #wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=0.75), "-0.75speed"))
-    wavTimeStretchFiles.append((audioData, "-1speed"))
-    #wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.25), "-1.25speed"))
-    wavTimeStretchFiles.append((lb.effects.time_stretch(audioData, rate=1.5), "-1.5speed"))
+def augmentation_pipeline(audioData, sampleRate, filename, outputBaseFilePath, length = 1):
+    folders = ["/defult", "/0.5-Speed", "/0.75-Speed", "/1.25-Speed", "/1.5-Speed", "/-1-pitch", "/-0.5-pitch", "/0.5-pitch", "/1-pitch", "/noise", "/inverted", "/randomGain"]
+    for folder in folders:
+        if not os.path.exists(outputBaseFilePath + folder):
+            os.mkdir(outputBaseFilePath + folder)
 
-    wavPitchFiles = []
-    for file in wavTimeStretchFiles:
-        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-1), file[1] + "-dsift1"))
-        #wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=-0.5), file[1] + "-dsift0.5"))
-        wavPitchFiles.append((file[0], file[1] + "-nosift"))
-        #wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=0.5), file[1] + "-usift0.5"))
-        wavPitchFiles.append((lb.effects.pitch_shift(file[0], sr=sampleRate, n_steps=1), file[1] + "-usift1"))
+    sf.write(outputBaseFilePath + "/defult/" + filename + ".wav", set_audio_length(audioData, sampleRate, length), sampleRate, format='wav')
     
-    wavFiles = []
-    for file in wavPitchFiles:
-        wavFiles.append((random_gain(add_white_noise(file[0])), file[1] + ".wav"))
-        wavFiles.append((random_gain(add_white_noise(invert_polarity(file[0]))), file[1] + "-inverted.wav"))
+    sf.write(outputBaseFilePath + "/0.5-Speed/" + filename + "0.5-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=0.5), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/0.75-Speed/" + filename + "0.75-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=0.75), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/1.25-Speed/" + filename + "1.25-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=1.25), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/1.5-Speed/" + filename + "1.5-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=1.5), sampleRate, length), sampleRate, format='wav')
+    
+    sf.write(outputBaseFilePath + "/-1-pitch/" + filename + "-1-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=-1), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/-0.5-pitch/" + filename + "-0.5-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=-0.5), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/0.5-pitch/" + filename + "0.5-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=0.5), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/1-pitch/" + filename + "1-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=1), sampleRate, length), sampleRate, format='wav')
+    
+    sf.write(outputBaseFilePath + "/randomGain/" + filename + "gain.wav", set_audio_length(random_gain(audioData), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/noise/" + filename + "noise.wav", set_audio_length(add_white_noise(audioData), sampleRate, length), sampleRate, format='wav')
+    sf.write(outputBaseFilePath + "/inverted/" + filename + "inverted.wav", set_audio_length(invert_polarity(audioData), sampleRate, length), sampleRate, format='wav')
 
-    return wavFiles
-
-#compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds10-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)
-apply_data_augmentation_folds(os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 10)
+compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)
+apply_data_augmentation_folds(os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 5)
 
 #compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
 #apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])
