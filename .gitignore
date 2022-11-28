@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 # Datasets
+Data
 Data/ESC-50-Folds
 Data/ESC-50-Folds-Compressed
 Data/ESC-50-Compressed
