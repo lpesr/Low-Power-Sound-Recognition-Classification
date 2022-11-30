@@ -1,0 +1,271 @@
+Augmented Data,RBF SVM,Naive Bayes,Neural Net
+Original + 0.8-Speed,0.752,0.715,0.653
+Original + 0.9-Speed,0.745,0.706,0.655
+Original + 1.1-Speed,0.765,0.703,0.699
+Original + 1.2-Speed,0.770,0.712,0.659
+Original + 0.8-Speed 0.9-Speed,0.746,0.718,0.677
+Original + 0.8-Speed 1.1-Speed,0.768,0.713,0.675
+Original + 0.8-Speed 1.2-Speed,0.757,0.701,0.668
+Original + 0.9-Speed 1.1-Speed,0.749,0.707,0.684
+Original + 0.9-Speed 1.2-Speed,0.750,0.703,0.648
+Original + 1.1-Speed 1.2-Speed,0.751,0.699,0.684
+Original + 0.8-Speed 0.9-Speed 1.1-Speed,0.755,0.713,0.666
+Original + 0.8-Speed 0.9-Speed 1.2-Speed,0.753,0.710,0.649
+Original + 0.8-Speed 1.1-Speed 1.2-Speed,0.752,0.701,0.678
+Original + 0.9-Speed 1.1-Speed 1.2-Speed,0.754,0.707,0.670
+Original + 0.8-Speed 0.9-Speed 1.1-Speed 1.2-Speed,0.750,0.705,0.667
+Original + -4-pitch,0.764,0.728,0.669
+Original + -3-pitch,0.785,0.709,0.662
+Original + -2-pitch,0.725,0.692,0.680
+Original + -1-pitch,0.762,0.684,0.687
+Original + 1-pitch,0.734,0.710,0.669
+Original + 2-pitch,0.743,0.689,0.662
+Original + 3-pitch,0.721,0.672,0.634
+Original + 4-pitch,0.711,0.670,0.620
+Original + -4-pitch -3-pitch,0.777,0.710,0.673
+Original + -4-pitch -2-pitch,0.774,0.709,0.638
+Original + -4-pitch -1-pitch,0.768,0.710,0.653
+Original + -4-pitch 1-pitch,0.764,0.705,0.673
+Original + -4-pitch 2-pitch,0.757,0.697,0.674
+Original + -4-pitch 3-pitch,0.737,0.697,0.668
+Original + -4-pitch 4-pitch,0.734,0.682,0.653
+Original + -3-pitch -2-pitch,0.779,0.707,0.699
+Original + -3-pitch -1-pitch,0.772,0.691,0.683
+Original + -3-pitch 1-pitch,0.760,0.712,0.693
+Original + -3-pitch 2-pitch,0.748,0.705,0.681
+Original + -3-pitch 3-pitch,0.749,0.702,0.668
+Original + -3-pitch 4-pitch,0.748,0.693,0.634
+Original + -2-pitch -1-pitch,0.747,0.702,0.699
+Original + -2-pitch 1-pitch,0.733,0.709,0.664
+Original + -2-pitch 2-pitch,0.728,0.695,0.688
+Original + -2-pitch 3-pitch,0.736,0.692,0.658
+Original + -2-pitch 4-pitch,0.729,0.697,0.647
+Original + -1-pitch 1-pitch,0.741,0.703,0.682
+Original + -1-pitch 2-pitch,0.736,0.689,0.665
+Original + -1-pitch 3-pitch,0.744,0.689,0.653
+Original + -1-pitch 4-pitch,0.739,0.677,0.630
+Original + 1-pitch 2-pitch,0.747,0.689,0.641
+Original + 1-pitch 3-pitch,0.734,0.681,0.662
+Original + 1-pitch 4-pitch,0.734,0.678,0.636
+Original + 2-pitch 3-pitch,0.718,0.675,0.648
+Original + 2-pitch 4-pitch,0.720,0.666,0.625
+Original + 3-pitch 4-pitch,0.722,0.656,0.626
+Original + -4-pitch -3-pitch -2-pitch,0.772,0.705,0.677
+Original + -4-pitch -3-pitch -1-pitch,0.769,0.700,0.681
+Original + -4-pitch -3-pitch 1-pitch,0.768,0.698,0.666
+Original + -4-pitch -3-pitch 2-pitch,0.754,0.701,0.685
+Original + -4-pitch -3-pitch 3-pitch,0.749,0.692,0.673
+Original + -4-pitch -3-pitch 4-pitch,0.742,0.688,0.649
+Original + -4-pitch -2-pitch -1-pitch,0.768,0.696,0.667
+Original + -4-pitch -2-pitch 1-pitch,0.750,0.701,0.652
+Original + -4-pitch -2-pitch 2-pitch,0.752,0.692,0.643
+Original + -4-pitch -2-pitch 3-pitch,0.744,0.692,0.649
+Original + -4-pitch -2-pitch 4-pitch,0.736,0.688,0.662
+Original + -4-pitch -1-pitch 1-pitch,0.758,0.693,0.669
+Original + -4-pitch -1-pitch 2-pitch,0.746,0.685,0.660
+Original + -4-pitch -1-pitch 3-pitch,0.739,0.677,0.664
+Original + -4-pitch -1-pitch 4-pitch,0.731,0.678,0.666
+Original + -4-pitch 1-pitch 2-pitch,0.751,0.677,0.660
+Original + -4-pitch 1-pitch 3-pitch,0.745,0.675,0.656
+Original + -4-pitch 1-pitch 4-pitch,0.734,0.665,0.657
+Original + -4-pitch 2-pitch 3-pitch,0.740,0.668,0.646
+Original + -4-pitch 2-pitch 4-pitch,0.732,0.656,0.656
+Original + -4-pitch 3-pitch 4-pitch,0.733,0.653,0.665
+Original + -3-pitch -2-pitch -1-pitch,0.768,0.704,0.697
+Original + -3-pitch -2-pitch 1-pitch,0.753,0.701,0.667
+Original + -3-pitch -2-pitch 2-pitch,0.745,0.697,0.669
+Original + -3-pitch -2-pitch 3-pitch,0.740,0.698,0.660
+Original + -3-pitch -2-pitch 4-pitch,0.742,0.700,0.665
+Original + -3-pitch -1-pitch 1-pitch,0.743,0.703,0.661
+Original + -3-pitch -1-pitch 2-pitch,0.741,0.698,0.666
+Original + -3-pitch -1-pitch 3-pitch,0.744,0.685,0.690
+Original + -3-pitch -1-pitch 4-pitch,0.740,0.686,0.652
+Original + -3-pitch 1-pitch 2-pitch,0.742,0.695,0.678
+Original + -3-pitch 1-pitch 3-pitch,0.744,0.687,0.675
+Original + -3-pitch 1-pitch 4-pitch,0.741,0.679,0.666
+Original + -3-pitch 2-pitch 3-pitch,0.740,0.680,0.680
+Original + -3-pitch 2-pitch 4-pitch,0.736,0.678,0.676
+Original + -3-pitch 3-pitch 4-pitch,0.735,0.668,0.662
+Original + -2-pitch -1-pitch 1-pitch,0.733,0.702,0.661
+Original + -2-pitch -1-pitch 2-pitch,0.730,0.693,0.687
+Original + -2-pitch -1-pitch 3-pitch,0.740,0.692,0.662
+Original + -2-pitch -1-pitch 4-pitch,0.732,0.694,0.654
+Original + -2-pitch 1-pitch 2-pitch,0.727,0.704,0.685
+Original + -2-pitch 1-pitch 3-pitch,0.744,0.701,0.664
+Original + -2-pitch 1-pitch 4-pitch,0.732,0.697,0.649
+Original + -2-pitch 2-pitch 3-pitch,0.719,0.692,0.651
+Original + -2-pitch 2-pitch 4-pitch,0.727,0.700,0.660
+Original + -2-pitch 3-pitch 4-pitch,0.722,0.700,0.653
+Original + -1-pitch 1-pitch 2-pitch,0.742,0.705,0.664
+Original + -1-pitch 1-pitch 3-pitch,0.736,0.688,0.664
+Original + -1-pitch 1-pitch 4-pitch,0.734,0.682,0.654
+Original + -1-pitch 2-pitch 3-pitch,0.728,0.694,0.644
+Original + -1-pitch 2-pitch 4-pitch,0.733,0.682,0.664
+Original + -1-pitch 3-pitch 4-pitch,0.730,0.672,0.647
+Original + 1-pitch 2-pitch 3-pitch,0.723,0.667,0.627
+Original + 1-pitch 2-pitch 4-pitch,0.731,0.672,0.648
+Original + 1-pitch 3-pitch 4-pitch,0.709,0.665,0.639
+Original + 2-pitch 3-pitch 4-pitch,0.709,0.652,0.614
+Original + -4-pitch -3-pitch -2-pitch -1-pitch,0.765,0.707,0.686
+Original + -4-pitch -3-pitch -2-pitch 1-pitch,0.752,0.696,0.663
+Original + -4-pitch -3-pitch -2-pitch 2-pitch,0.747,0.694,0.659
+Original + -4-pitch -3-pitch -2-pitch 3-pitch,0.744,0.691,0.640
+Original + -4-pitch -3-pitch -2-pitch 4-pitch,0.740,0.684,0.652
+Original + -4-pitch -3-pitch -1-pitch 1-pitch,0.752,0.698,0.658
+Original + -4-pitch -3-pitch -1-pitch 2-pitch,0.747,0.694,0.654
+Original + -4-pitch -3-pitch -1-pitch 3-pitch,0.742,0.694,0.667
+Original + -4-pitch -3-pitch -1-pitch 4-pitch,0.746,0.691,0.673
+Original + -4-pitch -3-pitch 1-pitch 2-pitch,0.753,0.702,0.656
+Original + -4-pitch -3-pitch 1-pitch 3-pitch,0.747,0.702,0.668
+Original + -4-pitch -3-pitch 1-pitch 4-pitch,0.739,0.692,0.666
+Original + -4-pitch -3-pitch 2-pitch 3-pitch,0.747,0.692,0.682
+Original + -4-pitch -3-pitch 2-pitch 4-pitch,0.735,0.692,0.674
+Original + -4-pitch -3-pitch 3-pitch 4-pitch,0.732,0.687,0.668
+Original + -4-pitch -2-pitch -1-pitch 1-pitch,0.748,0.689,0.663
+Original + -4-pitch -2-pitch -1-pitch 2-pitch,0.745,0.684,0.653
+Original + -4-pitch -2-pitch -1-pitch 3-pitch,0.739,0.688,0.661
+Original + -4-pitch -2-pitch -1-pitch 4-pitch,0.734,0.675,0.674
+Original + -4-pitch -2-pitch 1-pitch 2-pitch,0.739,0.691,0.636
+Original + -4-pitch -2-pitch 1-pitch 3-pitch,0.735,0.679,0.651
+Original + -4-pitch -2-pitch 1-pitch 4-pitch,0.732,0.677,0.669
+Original + -4-pitch -2-pitch 2-pitch 3-pitch,0.736,0.679,0.648
+Original + -4-pitch -2-pitch 2-pitch 4-pitch,0.730,0.675,0.664
+Original + -4-pitch -2-pitch 3-pitch 4-pitch,0.727,0.671,0.663
+Original + -4-pitch -1-pitch 1-pitch 2-pitch,0.743,0.667,0.660
+Original + -4-pitch -1-pitch 1-pitch 3-pitch,0.738,0.660,0.679
+Original + -4-pitch -1-pitch 1-pitch 4-pitch,0.725,0.663,0.662
+Original + -4-pitch -1-pitch 2-pitch 3-pitch,0.734,0.656,0.666
+Original + -4-pitch -1-pitch 2-pitch 4-pitch,0.725,0.656,0.673
+Original + -4-pitch -1-pitch 3-pitch 4-pitch,0.725,0.652,0.661
+Original + -4-pitch 1-pitch 2-pitch 3-pitch,0.737,0.642,0.654
+Original + -4-pitch 1-pitch 2-pitch 4-pitch,0.733,0.638,0.664
+Original + -4-pitch 1-pitch 3-pitch 4-pitch,0.733,0.632,0.653
+Original + -4-pitch 2-pitch 3-pitch 4-pitch,0.732,0.630,0.639
+Original + -3-pitch -2-pitch -1-pitch 1-pitch,0.751,0.681,0.666
+Original + -3-pitch -2-pitch -1-pitch 2-pitch,0.741,0.697,0.664
+Original + -3-pitch -2-pitch -1-pitch 3-pitch,0.743,0.694,0.676
+Original + -3-pitch -2-pitch -1-pitch 4-pitch,0.745,0.688,0.678
+Original + -3-pitch -2-pitch 1-pitch 2-pitch,0.736,0.698,0.662
+Original + -3-pitch -2-pitch 1-pitch 3-pitch,0.741,0.694,0.660
+Original + -3-pitch -2-pitch 1-pitch 4-pitch,0.732,0.687,0.655
+Original + -3-pitch -2-pitch 2-pitch 3-pitch,0.735,0.690,0.645
+Original + -3-pitch -2-pitch 2-pitch 4-pitch,0.731,0.692,0.663
+Original + -3-pitch -2-pitch 3-pitch 4-pitch,0.735,0.687,0.665
+Original + -3-pitch -1-pitch 1-pitch 2-pitch,0.731,0.682,0.688
+Original + -3-pitch -1-pitch 1-pitch 3-pitch,0.741,0.679,0.682
+Original + -3-pitch -1-pitch 1-pitch 4-pitch,0.736,0.674,0.666
+Original + -3-pitch -1-pitch 2-pitch 3-pitch,0.741,0.675,0.673
+Original + -3-pitch -1-pitch 2-pitch 4-pitch,0.732,0.674,0.651
+Original + -3-pitch -1-pitch 3-pitch 4-pitch,0.733,0.670,0.667
+Original + -3-pitch 1-pitch 2-pitch 3-pitch,0.745,0.668,0.654
+Original + -3-pitch 1-pitch 2-pitch 4-pitch,0.737,0.671,0.654
+Original + -3-pitch 1-pitch 3-pitch 4-pitch,0.736,0.657,0.667
+Original + -3-pitch 2-pitch 3-pitch 4-pitch,0.736,0.659,0.651
+Original + -2-pitch -1-pitch 1-pitch 2-pitch,0.722,0.699,0.666
+Original + -2-pitch -1-pitch 1-pitch 3-pitch,0.737,0.691,0.660
+Original + -2-pitch -1-pitch 1-pitch 4-pitch,0.732,0.685,0.661
+Original + -2-pitch -1-pitch 2-pitch 3-pitch,0.728,0.679,0.665
+Original + -2-pitch -1-pitch 2-pitch 4-pitch,0.723,0.687,0.633
+Original + -2-pitch -1-pitch 3-pitch 4-pitch,0.731,0.693,0.662
+Original + -2-pitch 1-pitch 2-pitch 3-pitch,0.730,0.693,0.676
+Original + -2-pitch 1-pitch 2-pitch 4-pitch,0.736,0.694,0.660
+Original + -2-pitch 1-pitch 3-pitch 4-pitch,0.735,0.683,0.658
+Original + -2-pitch 2-pitch 3-pitch 4-pitch,0.725,0.693,0.652
+Original + -1-pitch 1-pitch 2-pitch 3-pitch,0.728,0.691,0.662
+Original + -1-pitch 1-pitch 2-pitch 4-pitch,0.729,0.689,0.663
+Original + -1-pitch 1-pitch 3-pitch 4-pitch,0.736,0.682,0.666
+Original + -1-pitch 2-pitch 3-pitch 4-pitch,0.725,0.674,0.624
+Original + 1-pitch 2-pitch 3-pitch 4-pitch,0.713,0.659,0.633
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch,0.752,0.686,0.651
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 2-pitch,0.742,0.694,0.649
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 3-pitch,0.743,0.696,0.656
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 4-pitch,0.740,0.691,0.655
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 2-pitch,0.734,0.694,0.641
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 3-pitch,0.737,0.686,0.650
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 4-pitch,0.734,0.680,0.660
+Original + -4-pitch -3-pitch -2-pitch 2-pitch 3-pitch,0.736,0.689,0.642
+Original + -4-pitch -3-pitch -2-pitch 2-pitch 4-pitch,0.733,0.680,0.657
+Original + -4-pitch -3-pitch -2-pitch 3-pitch 4-pitch,0.729,0.685,0.662
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 2-pitch,0.735,0.699,0.648
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 3-pitch,0.741,0.685,0.675
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 4-pitch,0.731,0.680,0.662
+Original + -4-pitch -3-pitch -1-pitch 2-pitch 3-pitch,0.740,0.678,0.657
+Original + -4-pitch -3-pitch -1-pitch 2-pitch 4-pitch,0.734,0.678,0.670
+Original + -4-pitch -3-pitch -1-pitch 3-pitch 4-pitch,0.731,0.680,0.653
+Original + -4-pitch -3-pitch 1-pitch 2-pitch 3-pitch,0.742,0.690,0.656
+Original + -4-pitch -3-pitch 1-pitch 2-pitch 4-pitch,0.730,0.683,0.673
+Original + -4-pitch -3-pitch 1-pitch 3-pitch 4-pitch,0.731,0.676,0.668
+Original + -4-pitch -3-pitch 2-pitch 3-pitch 4-pitch,0.733,0.679,0.660
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 2-pitch,0.733,0.676,0.652
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 3-pitch,0.739,0.673,0.676
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 4-pitch,0.736,0.668,0.653
+Original + -4-pitch -2-pitch -1-pitch 2-pitch 3-pitch,0.734,0.671,0.663
+Original + -4-pitch -2-pitch -1-pitch 2-pitch 4-pitch,0.733,0.668,0.648
+Original + -4-pitch -2-pitch -1-pitch 3-pitch 4-pitch,0.728,0.663,0.660
+Original + -4-pitch -2-pitch 1-pitch 2-pitch 3-pitch,0.732,0.664,0.629
+Original + -4-pitch -2-pitch 1-pitch 2-pitch 4-pitch,0.729,0.665,0.657
+Original + -4-pitch -2-pitch 1-pitch 3-pitch 4-pitch,0.722,0.655,0.636
+Original + -4-pitch -2-pitch 2-pitch 3-pitch 4-pitch,0.727,0.658,0.661
+Original + -4-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.732,0.649,0.663
+Original + -4-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.728,0.640,0.656
+Original + -4-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.721,0.637,0.652
+Original + -4-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.725,0.636,0.656
+Original + -4-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.732,0.623,0.667
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch,0.733,0.696,0.655
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 3-pitch,0.739,0.686,0.678
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 4-pitch,0.735,0.684,0.659
+Original + -3-pitch -2-pitch -1-pitch 2-pitch 3-pitch,0.731,0.684,0.669
+Original + -3-pitch -2-pitch -1-pitch 2-pitch 4-pitch,0.732,0.689,0.665
+Original + -3-pitch -2-pitch -1-pitch 3-pitch 4-pitch,0.735,0.683,0.655
+Original + -3-pitch -2-pitch 1-pitch 2-pitch 3-pitch,0.732,0.690,0.650
+Original + -3-pitch -2-pitch 1-pitch 2-pitch 4-pitch,0.728,0.681,0.656
+Original + -3-pitch -2-pitch 1-pitch 3-pitch 4-pitch,0.735,0.672,0.664
+Original + -3-pitch -2-pitch 2-pitch 3-pitch 4-pitch,0.726,0.675,0.644
+Original + -3-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.731,0.670,0.688
+Original + -3-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.727,0.666,0.654
+Original + -3-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.730,0.657,0.671
+Original + -3-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.728,0.658,0.663
+Original + -3-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.733,0.654,0.648
+Original + -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.729,0.684,0.653
+Original + -2-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.735,0.692,0.646
+Original + -2-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.734,0.685,0.663
+Original + -2-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.724,0.686,0.634
+Original + -2-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.736,0.688,0.637
+Original + -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.724,0.676,0.655
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch,0.738,0.692,0.665
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 3-pitch,0.743,0.684,0.666
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 4-pitch,0.738,0.676,0.661
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 2-pitch 3-pitch,0.740,0.686,0.646
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 2-pitch 4-pitch,0.737,0.681,0.672
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 3-pitch 4-pitch,0.736,0.684,0.648
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 2-pitch 3-pitch,0.735,0.686,0.655
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 2-pitch 4-pitch,0.733,0.681,0.644
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 3-pitch 4-pitch,0.727,0.679,0.642
+Original + -4-pitch -3-pitch -2-pitch 2-pitch 3-pitch 4-pitch,0.729,0.678,0.657
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.732,0.681,0.674
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.729,0.676,0.647
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.728,0.673,0.656
+Original + -4-pitch -3-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.729,0.668,0.672
+Original + -4-pitch -3-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.734,0.673,0.670
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.734,0.664,0.666
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.731,0.661,0.653
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.732,0.659,0.645
+Original + -4-pitch -2-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.721,0.658,0.663
+Original + -4-pitch -2-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.723,0.651,0.652
+Original + -4-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.724,0.633,0.653
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.731,0.683,0.653
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.727,0.680,0.655
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.735,0.673,0.664
+Original + -3-pitch -2-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.724,0.676,0.652
+Original + -3-pitch -2-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.728,0.674,0.645
+Original + -3-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.729,0.656,0.654
+Original + -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.735,0.679,0.637
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch,0.735,0.678,0.656
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch 4-pitch,0.735,0.672,0.658
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 3-pitch 4-pitch,0.732,0.668,0.644
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 2-pitch 3-pitch 4-pitch,0.728,0.673,0.657
+Original + -4-pitch -3-pitch -2-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.729,0.672,0.654
+Original + -4-pitch -3-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.728,0.666,0.664
+Original + -4-pitch -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.723,0.648,0.649
+Original + -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.727,0.673,0.651
+Original + -4-pitch -3-pitch -2-pitch -1-pitch 1-pitch 2-pitch 3-pitch 4-pitch,0.728,0.668,0.663

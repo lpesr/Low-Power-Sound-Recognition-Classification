@@ -1,0 +1,7 @@
+Augmented Data,RBF SVM,Naive Bayes,Neural Net
+Original + 0.5-Speed,0.724,0.649,0.733
+Original + 0.75-Speed,0.796,0.699,0.822
+Original + 1.25-Speed,0.856,0.730,0.904
+Original + 1.5-Speed,0.846,0.715,0.897
+Original + 0.5-Speed 0.75-Speed,0.738,0.656,0.745
+Original + 0.5-Speed 1.25-Speed,0.775,0.675,0.803

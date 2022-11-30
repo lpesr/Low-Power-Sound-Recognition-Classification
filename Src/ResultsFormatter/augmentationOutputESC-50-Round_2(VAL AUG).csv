@@ -1,0 +1,64 @@
+Augmented Data,RBF SVM,Naive Bayes,Neural Net
+Original + 0.5-pitch,0.529,0.484,0.563
+Original + 1-pitch,0.522,0.494,0.508
+Original + randomGain,0.532,0.497,0.530
+Original + inverted,0.520,0.494,0.555
+Original + 0.5-Speed,0.540,0.492,0.586
+Original + 0.75-Speed,0.544,0.501,0.544
+Original + 0.5-pitch 1-pitch,0.538,0.501,0.533
+Original + 0.5-pitch randomGain,0.523,0.491,0.555
+Original + 0.5-pitch inverted,0.524,0.488,0.529
+Original + 0.5-pitch 0.5-Speed,0.528,0.494,0.596
+Original + 0.5-pitch 0.75-Speed,0.529,0.483,0.568
+Original + 1-pitch randomGain,0.538,0.496,0.533
+Original + 1-pitch inverted,0.533,0.493,0.525
+Original + 1-pitch 0.5-Speed,0.537,0.497,0.613
+Original + 1-pitch 0.75-Speed,0.535,0.490,0.556
+Original + randomGain inverted,0.540,0.493,0.530
+Original + randomGain 0.5-Speed,0.532,0.500,0.569
+Original + randomGain 0.75-Speed,0.528,0.490,0.586
+Original + inverted 0.5-Speed,0.532,0.500,0.564
+Original + inverted 0.75-Speed,0.526,0.487,0.565
+Original + 0.5-Speed 0.75-Speed,0.537,0.495,0.549
+Original + 0.5-pitch 1-pitch randomGain,0.545,0.506,0.518
+Original + 0.5-pitch 1-pitch inverted,0.543,0.501,0.553
+Original + 0.5-pitch 1-pitch 0.5-Speed,0.532,0.491,0.618
+Original + 0.5-pitch 1-pitch 0.75-Speed,0.536,0.478,0.588
+Original + 0.5-pitch randomGain inverted,0.537,0.491,0.560
+Original + 0.5-pitch randomGain 0.5-Speed,0.525,0.495,0.599
+Original + 0.5-pitch randomGain 0.75-Speed,0.525,0.484,0.579
+Original + 0.5-pitch inverted 0.5-Speed,0.523,0.498,0.578
+Original + 0.5-pitch inverted 0.75-Speed,0.524,0.487,0.588
+Original + 0.5-pitch 0.5-Speed 0.75-Speed,0.542,0.498,0.588
+Original + 1-pitch randomGain inverted,0.542,0.486,0.517
+Original + 1-pitch randomGain 0.5-Speed,0.538,0.504,0.590
+Original + 1-pitch randomGain 0.75-Speed,0.530,0.492,0.584
+Original + 1-pitch inverted 0.5-Speed,0.540,0.502,0.595
+Original + 1-pitch inverted 0.75-Speed,0.530,0.496,0.582
+Original + 1-pitch 0.5-Speed 0.75-Speed,0.547,0.493,0.586
+Original + randomGain inverted 0.5-Speed,0.539,0.507,0.573
+Original + randomGain inverted 0.75-Speed,0.533,0.490,0.586
+Original + randomGain 0.5-Speed 0.75-Speed,0.538,0.501,0.571
+Original + inverted 0.5-Speed 0.75-Speed,0.542,0.500,0.558
+Original + 0.5-pitch 1-pitch randomGain inverted,0.554,0.500,0.537
+Original + 0.5-pitch 1-pitch randomGain 0.5-Speed,0.538,0.502,0.580
+Original + 0.5-pitch 1-pitch randomGain 0.75-Speed,0.537,0.486,0.574
+Original + 0.5-pitch 1-pitch inverted 0.5-Speed,0.538,0.500,0.598
+Original + 0.5-pitch 1-pitch inverted 0.75-Speed,0.538,0.489,0.563
+Original + 0.5-pitch 1-pitch 0.5-Speed 0.75-Speed,0.538,0.492,0.580
+Original + 0.5-pitch randomGain inverted 0.5-Speed,0.546,0.503,0.594
+Original + 0.5-pitch randomGain inverted 0.75-Speed,0.532,0.494,0.561
+Original + 0.5-pitch randomGain 0.5-Speed 0.75-Speed,0.536,0.495,0.578
+Original + 0.5-pitch inverted 0.5-Speed 0.75-Speed,0.540,0.495,0.585
+Original + 1-pitch randomGain inverted 0.5-Speed,0.546,0.509,0.606
+Original + 1-pitch randomGain inverted 0.75-Speed,0.533,0.485,0.575
+Original + 1-pitch randomGain 0.5-Speed 0.75-Speed,0.548,0.501,0.595
+Original + 1-pitch inverted 0.5-Speed 0.75-Speed,0.550,0.503,0.585
+Original + randomGain inverted 0.5-Speed 0.75-Speed,0.540,0.497,0.576
+Original + 0.5-pitch 1-pitch randomGain inverted 0.5-Speed,0.548,0.503,0.593
+Original + 0.5-pitch 1-pitch randomGain inverted 0.75-Speed,0.536,0.488,0.571
+Original + 0.5-pitch 1-pitch randomGain 0.5-Speed 0.75-Speed,0.540,0.494,0.585
+Original + 0.5-pitch 1-pitch inverted 0.5-Speed 0.75-Speed,0.543,0.494,0.580
+Original + 0.5-pitch randomGain inverted 0.5-Speed 0.75-Speed,0.543,0.498,0.603
+Original + 1-pitch randomGain inverted 0.5-Speed 0.75-Speed,0.547,0.499,0.611
+Original + 0.5-pitch 1-pitch randomGain inverted 0.5-Speed 0.75-Speed,0.548,0.498,0.585

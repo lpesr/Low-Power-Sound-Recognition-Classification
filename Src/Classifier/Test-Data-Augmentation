@@ -1,0 +1,113 @@
+from os import listdir
+from os.path import isfile, join
+import numpy as np
+from sklearn.svm import SVC
+from sklearn.model_selection import RepeatedKFold
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import f1_score
+import pandas as pd
+import os
+import pickle
+import sys
+import time
+from itertools import combinations
+
+dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
+import DataPrep as dp
+
+#Define all of the classifiers to test
+classifiers = [
+    SVC(kernel="rbf"),
+    GaussianNB(),
+    MLPClassifier(max_iter=1000),
+]
+names = [
+    "RBF SVM",
+    "Naive Bayes",
+    "Neural Net",
+]
+
+def run_evaluation(originalData, augDatasets, outputFile):
+    output = open(outputFile, "a")
+
+    output.write("Augmented Data," + names[0] + "," + names[1] + "," + names[2] + "\n")
+
+    for datasets in augDatasets:
+        for L in range(len(datasets) + 1):
+            for comb in combinations(datasets, L):
+                test_augmented_dataset(originalData, comb, output)
+    output.close()
+            
+def test_augmented_dataset(originalDataset, combinations, outputFile):
+    if len(combinations) == 0:
+        return
+
+    (X, Y) = dp.prepare_input_data(originalDataset, ["on", "off", "yes", "no"], 0.05, 0.75, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+
+    datasets = [(np.array(X), np.array(Y))]
+    for combination in combinations:
+        (dataFoldsBuffer, labelFoldsBuffer) = dp.prepare_input_data(originalDataset + combination, ["on", "off", "yes", "no"], 0.05, 0.75, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+        datasets.append((np.array(dataFoldsBuffer), np.array(labelFoldsBuffer)))
+
+    numKFoldSplits = 10
+    numKFoldRep = 2
+
+    #Create a results matrix
+    i, j = numKFoldSplits * numKFoldRep, len(classifiers)
+    results = [[0 for x in range(i)] for y in range(j)] 
+
+    #Normalize the data
+    scaler = MinMaxScaler()
+    for (x, _) in datasets:
+        x = scaler.fit_transform(x) 
+
+    #Iterate over all of the classifiers
+    for j in range(len(classifiers)):
+        i = 0
+
+        #K cross validate the data (there will be an equal number of both classes to train on)
+        #This is because the data was split and then combined earlier
+        kf = RepeatedKFold(n_splits=numKFoldSplits, n_repeats=numKFoldRep)
+        for train, test in kf.split(datasets[0][0]):
+            X_train, y_train = [], []
+            for (x, y) in datasets:
+                X_train += list(x[train])
+                #X_test += list(x[test])
+                y_train += list(y[train])
+                #y_test += list(y[test])
+
+            X_test = (np.array(X))[test]
+            y_test = (np.array(Y))[test]
+            #Fit the classifier and label the testing split
+            clf = classifiers[j].fit(X_train, y_train)
+
+            preditctions = clf.predict(X_test)
+
+            #Caculate the F1 score and store it
+            results[j][i] = format(f1_score(y_test, preditctions, average='macro'), ".3f")
+
+            i += 1
+
+    outputFile.write("Original + " + " ".join([name[1:] for name in combinations]) + "," + format(sum(map(float, results[0][:])) / len(results[0]), ".3f") + "," + format(sum(map(float, results[1][:])) / len(results[1]), ".3f") + "," + format(sum(map(float, results[2][:])) / len(results[2]), ".3f") + "\n")
+    outputFile.flush()
+
+dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+originalDataset = os.path.join(dirname, "Data/Speech-Commands-Compressed")
+augmnetedSpeedDatasets = ["-0.5-Speed", "-0.75-Speed", "-1.25-Speed", "-1.5-Speed"]
+augmentedPitchDatasets = ["--1-pitch", "--0.5-pitch", "-0.5-pitch", "-1-pitch"]
+augmentedNoiseDataset = ["-noise"]
+augmentedInvertedDataset = ["-inverted"]
+augmentedGainDataset = ["-randomGain"]
+augmentedDatasets = [augmnetedSpeedDatasets, augmentedPitchDatasets, augmentedNoiseDataset, augmentedInvertedDataset, augmentedGainDataset]
+
+run_evaluation(originalDataset, augmentedDatasets, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Src/ResultsFormatter/augmentationOutputSpeechCommands.csv")
