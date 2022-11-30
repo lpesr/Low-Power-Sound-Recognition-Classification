@@ -3,6 +3,7 @@ from os import listdir
 from os.path import isfile, join
 import sys
 import FeatureExtractor as fe
+import librosa
 
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
@@ -30,6 +31,9 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType):
                     dataVector.append(centroids)
                 elif featureType == 1:
                     zcr = fe.wav_to_ZCR(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    #zcr = fe.wav_to_ZCR_overlapping_frames(dir  + "/" + label + "/" + file, frameTime, wavLength)
+                    #data, sr = librosa.load(dir  + "/" + label + "/" + file)
+                    #zcr = librosa.feature.zero_crossing_rate(data, frame_length = int(sr * frameTime), hop_length = int(sr * frameTime / 2))[0]
                     dataVector.append(zcr)
                 elif featureType == 2:
                     centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)

@@ -31,6 +31,19 @@ def get_wav_data(fileName, frameTime):
     audioData = convert_to_single_band(audioData)
     return (sampleRate, audioData, frameSize)
 
+def highest_power(signal, sampleRate):
+    chunks = np.array_split(signal, len(signal) / sampleRate * 60)
+    avr = [(i, np.mean(list(map(abs, chunk)))) for i, chunk in enumerate(chunks)]
+    return sorted(avr, key = lambda x: x[1], reverse=True)[0][0] * (sampleRate / 60)
+
+def section_around_highest_power(signal, sampleRate, length):
+    i = highest_power(signal, sampleRate)
+    if i <= length * sampleRate / 2:
+        return signal
+    if i > len(signal) - (length * sampleRate / 2):
+        i = len(signal) - (length * sampleRate / 2)
+    return signal[int(i - length * sampleRate / 2):int(i + length * sampleRate / 2)]
+
 def calculate_spectral_centroid(data, sampleRate):
     magnitudes = np.abs(np.fft.rfft(data))                                                  # magnitudes of positive frequencies
     length = len(data)                    
@@ -94,6 +107,8 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
 def wav_to_MFCCs(fileName, frameTime, paddingSize = 10, jump = 0.5):
     audioData, sampleRate = lb.load(fileName)
 
+    audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
+
     beginning = int(sampleRate * jump)
     end = int(paddingSize * sampleRate + sampleRate * jump)
 
@@ -101,3 +116,20 @@ def wav_to_MFCCs(fileName, frameTime, paddingSize = 10, jump = 0.5):
         audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
 
     return np.array(lb.feature.mfcc(y=audioData[beginning:end], sr=sampleRate)).flatten()
+
+def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):
+    (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
+
+    zeroCrossings = np.nonzero(np.diff(audioData > 0))[0]
+    zcr = [0] * int(len(audioData) / frameSize + 1)
+    zcrHop = [0] * int(len(audioData) / frameSize + 1)
+    for point in zeroCrossings :
+        zcr[int(point / frameSize)] += 1
+        if int((point / frameSize) * 1.5) < len(audioData):
+            zcrHop[int((point / frameSize) * 1.5)] += 1
+
+    result = [None]*(len(zcr)+len(zcrHop))
+    result[::2] = zcr
+    result[1::2] = zcrHop
+
+    return padd_and_snip_feature(result, sampleRate, paddingSize, frameSize)
