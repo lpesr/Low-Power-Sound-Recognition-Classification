@@ -52,11 +52,11 @@ def test_augmented_dataset(originalDataset, combinations, outputFile):
         return
 
     numFolds = 5
-    (dataFolds, labelFolds) = dp.prepare_input_data_with_folds(originalDataset, ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.05, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+    (dataFolds, labelFolds) = dp.prepare_input_data_with_folds(originalDataset, ["glass_breaking", "siren", "hand_saw", "crackling_fire"], 0.05, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
     (orignialDataFolds, orignialLabelFolds) = (dataFolds, labelFolds)
 
     for combination in combinations:
-        (dataFoldsBuffer, labelFoldsBuffer) = dp.prepare_input_data_with_folds(originalDataset + combination, ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.05, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+        (dataFoldsBuffer, labelFoldsBuffer) = dp.prepare_input_data_with_folds(originalDataset + combination, ["glass_breaking", "siren", "hand_saw", "crackling_fire"], 0.05, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
         for fold in range(0, numFolds):
             dataFolds[fold] += dataFoldsBuffer[fold]
             labelFolds[fold] += labelFoldsBuffer[fold]
@@ -98,4 +98,8 @@ augmentedPitchDatasets = ["--4-pitch", "--3-pitch", "--2-pitch", "--1-pitch", "-
 #augmentedDatasets = [["-0.5-pitch", "-1-pitch", "-randomGain", "-inverted", "-0.5-Speed", "-0.75-Speed"]]
 augmentedDatasets = [augmnetedSpeedDatasets, augmentedPitchDatasets]#, augmentedNoiseDataset, augmentedInvertedDataset, augmentedGainDataset]
 
-run_evaluation(originalDataset, augmentedDatasets, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Src/ResultsFormatter/augmentationOutputESC-50-MFCCs.csv")
+##run_evaluation(originalDataset, augmentedDatasets, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Src/ResultsFormatter/augmentationOutputESC-50-MFCCs.csv"
+
+output = open("U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Src/ResultsFormatter/augmentationOutputESC-50-MFCCs-Best-4-Classes-V2.csv", "a")
+output.write("Augmented Data," + names[0] + "," + names[1] + "," + names[2] + "\n")
+test_augmented_dataset(originalDataset, ["-Augmented-MFCC"], output)

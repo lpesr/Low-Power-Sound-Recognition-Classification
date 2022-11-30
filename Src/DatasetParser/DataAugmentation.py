@@ -112,11 +112,15 @@ def apply_data_augmentation_MFCC(dir, labels, length = 1, nFolds = 5):
 
         if not os.path.exists(dir + "-Augmented-MFCC"):
             os.mkdir(dir + "-Augmented-MFCC")
+            for foldDir in ["/fold1", "/fold2", "/fold3", "/fold4", "/fold5"]:
+                os.mkdir(dir + "-Augmented-MFCC" + foldDir)
+                for label in labels:
+                    os.mkdir(dir + "-Augmented-MFCC" + foldDir + "/" + label)
 
         for label in labels:
             for file in dp.get_wav_files(dir + "/" + fold[:-1], label):
                 audioData, sampleRate = lb.load(dir + "/" + fold + label + "/" + file)
-                augmentation_pipeline(audioData, sampleRate, file[:-4], dir, label, fold, length)
+                augmentation_pipeline_MFCC(audioData, sampleRate, file[:-4], dir, label, fold, length)
 
 def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold, length = 1):
     for i in range(0, 3):
