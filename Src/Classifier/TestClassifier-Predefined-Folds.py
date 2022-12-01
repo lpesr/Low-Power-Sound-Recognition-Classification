@@ -37,7 +37,7 @@ classifiers = [
     #SVC(kernel="sigmoid"),
     DecisionTreeClassifier(max_depth=100),
     RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
-    GaussianNB(),
+    GaussianNB(var_smoothing=0.005336699231206307),
     MLPClassifier(max_iter=1000),
 ]
 names = [

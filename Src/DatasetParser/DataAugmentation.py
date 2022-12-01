@@ -10,14 +10,24 @@ sys.path.append(os.path.join(dirname, 'Src/FeatureExtractor'))
 import DataPrep as dp
 import FeatureExtractor as fe
 
-def set_audio_length(singleBandWav, samplerate, length):
-    numOfSamples = int(samplerate * length)
-    if len(singleBandWav) > numOfSamples:
-        return singleBandWav[:numOfSamples]
-    elif len(singleBandWav) < numOfSamples:
-        return np.append(singleBandWav, [0.0] * int(numOfSamples - len(singleBandWav)))
+def highest_power(signal, sampleRate):
+    chunks = np.array_split(signal, len(signal) / sampleRate * 60)
+    avr = [(i, np.mean(list(map(abs, chunk)))) for i, chunk in enumerate(chunks)]
+    return sorted(avr, key = lambda x: x[1], reverse=True)[0][0] * (sampleRate / 60)
+
+def set_audio_length(signal, sampleRate, length):
+    i = highest_power(signal, sampleRate)
+    numOfSamples = int(sampleRate * length)
+    if len(signal) > numOfSamples:
+        if i <= numOfSamples / 2:
+            return signal[0:numOfSamples]
+        if i > len(signal) - (numOfSamples / 2):
+            i = len(signal) - (numOfSamples / 2)
+        return signal[int(i - numOfSamples / 2):int(i + numOfSamples / 2)]
+    elif len(signal) < numOfSamples:
+        return np.append(signal, [0.0] * int(numOfSamples - len(signal)))
     else:
-        return singleBandWav
+        return signal
 
 def compress_wav_file(filename, targetSamplerate, targetLength):
     audioData, sampleRate = lb.load(filename)
@@ -141,5 +151,7 @@ def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold
 #compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
 #apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])
 
-compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 4, 5)
-apply_data_augmentation_MFCC(os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 4, 5)
+#compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 4, 5)
+#apply_data_augmentation_MFCC(os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 4, 5)
+
+compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-ZCR"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)

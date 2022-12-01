@@ -39,7 +39,7 @@ def highest_power(signal, sampleRate):
 def section_around_highest_power(signal, sampleRate, length):
     i = highest_power(signal, sampleRate)
     if i <= length * sampleRate / 2:
-        return signal[0:int(length)]
+        return signal[0:int(length * sampleRate)]
     if i > len(signal) - (length * sampleRate / 2):
         i = len(signal) - (length * sampleRate / 2)
     return signal[int(i - length * sampleRate / 2):int(i + length * sampleRate / 2)]
@@ -115,7 +115,7 @@ def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20):
     if len(audioData) < end:
         audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
 
-    return np.array(lb.feature.mfcc(y=audioData, sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=int(sampleRate / 2))).flatten()
+    return np.array(lb.feature.mfcc(y=audioData, sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=int(numFft / 2))).flatten()
 
 def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)

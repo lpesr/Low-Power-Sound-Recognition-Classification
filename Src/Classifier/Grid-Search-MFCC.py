@@ -34,13 +34,13 @@ def run_grid_search(originalData, augDataset, numFFTs, numMFCCs, fileLengths, ou
         output.write("numMFCCs: " + str(numMFCC) + ",\n")
 
         output.write("FileLength")
-        for numFFT in numFFTs:
-            output.write("," + str(numFFT))
+        for fileLength in fileLengths:
+            output.write("," + str(fileLength))
         output.write("\n")
 
-        for fileLength in fileLengths:
-            output.write(str(fileLength) + ":")
-            for numFFT in numFFTs:
+        for numFFT in numFFTs:
+            output.write(str(numFFT) + ":")
+            for fileLength in fileLengths:
                 output.write(",")
                 result = test_dataset(originalData, augDataset, numFFT, numMFCC, fileLength)
                 output.write(str(result[0]) + " : " + str(result[1]))
@@ -89,4 +89,4 @@ def test_dataset(originalDataset, augmentedDataset, numFFT, numMFCC, fileLength)
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 originalDataset = os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s")
-run_grid_search(originalDataset, "-Augmented-MFCC", [512, 1024, 2048, 4096, 8192], [10, 15, 20, 25, 30], [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2], "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/grid_search-ESC-50-ZCR.csv")
+run_grid_search(originalDataset, "-Augmented-MFCC", [256, 512, 1024, 2048, 4096], [10, 15, 20, 25, 30], [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2], "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/grid_search-ESC-50-MFCC-Fixed-Hop-Length.csv")
