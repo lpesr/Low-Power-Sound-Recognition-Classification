@@ -123,4 +123,4 @@ def run_test_rig(dataset, labels):
 #test_feature("Data/UrbanSounds8k", ["gun_shot", "siren", "drilling", "children_playing", "street_music", "dog_bark", "car_horn", "air_conditioner"], 3)
 #run_test_rig("Data/UrbanSounds8k", ["gun_shot", "siren", "drilling", "children_playing", "street_music", "dog_bark", "car_horn", "air_conditioner"])
 
-test_feature("Data/ESC-50-Folds", ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire", "clapping", "crying_baby", "engine"], 4)
+test_feature("Data/ESC-50-Folds", ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire", "clapping", "crying_baby", "engine"], 1)

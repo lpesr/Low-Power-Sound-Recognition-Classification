@@ -141,4 +141,5 @@ def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold
 #compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
 #apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])
 
-apply_data_augmentation_MFCC(os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 1, 5)
+compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 4, 5)
+apply_data_augmentation_MFCC(os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 4, 5)

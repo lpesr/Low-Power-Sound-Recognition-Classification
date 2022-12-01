@@ -39,7 +39,7 @@ def highest_power(signal, sampleRate):
 def section_around_highest_power(signal, sampleRate, length):
     i = highest_power(signal, sampleRate)
     if i <= length * sampleRate / 2:
-        return signal
+        return signal[0:int(length)]
     if i > len(signal) - (length * sampleRate / 2):
         i = len(signal) - (length * sampleRate / 2)
     return signal[int(i - length * sampleRate / 2):int(i + length * sampleRate / 2)]
@@ -61,6 +61,8 @@ def wav_to_spectral_centroid(fileName, frameTime, paddingSize = 10):
 
 def wav_to_ZCR(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
+
+    audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
 
     zeroCrossings = np.nonzero(np.diff(audioData > 0))[0]
     zcr = [0] * int(len(audioData) / frameSize + 1)
@@ -104,18 +106,16 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
     sums = np.sum(magnitudes)
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
-def wav_to_MFCCs(fileName, frameTime, paddingSize = 10, jump = 0.5):
+def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20):
     audioData, sampleRate = lb.load(fileName)
 
     audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
 
-    beginning = int(sampleRate * jump)
-    end = int(paddingSize * sampleRate + sampleRate * jump)
-
+    end = int(paddingSize * sampleRate)
     if len(audioData) < end:
         audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
 
-    return np.array(lb.feature.mfcc(y=audioData[beginning:end], sr=sampleRate)).flatten()
+    return np.array(lb.feature.mfcc(y=audioData, sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=int(sampleRate / 2))).flatten()
 
 def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)
