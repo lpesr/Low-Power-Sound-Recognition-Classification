@@ -25,7 +25,7 @@ import DataPrep as dp
 
 numFolds = 5
 #(dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/UrbanSounds8k"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn"], 0.05, 0.5, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
-(dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw"], 0.01, 1, 1, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0, 0.5, 4, numFolds, numFft=512, numMFCC=15, hopLength=512)#dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.01, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 

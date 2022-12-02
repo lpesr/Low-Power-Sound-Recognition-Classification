@@ -115,6 +115,19 @@ def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=
     #if len(audioData) < end:
     #    audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
 
+    """bufferChunks = [audioData[x:x+int(paddingSize * sampleRate)] for x in range(0, len(audioData), int(paddingSize * sampleRate))]
+    avr = [np.mean(list(map(abs, chunk))) for chunk in bufferChunks]
+    featureChunks = []
+    for i, chunk in enumerate(bufferChunks):
+        if avr[i] > 0.01 and len(chunk) == int(paddingSize * sampleRate):
+            featureChunks.append(chunk)
+
+    features = []
+    for featureChunk in featureChunks:
+        features.append(np.array(lb.feature.mfcc(y=featureChunk[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten())
+
+    return features"""
+
     return np.array(lb.feature.mfcc(y=audioData[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
 
 def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):

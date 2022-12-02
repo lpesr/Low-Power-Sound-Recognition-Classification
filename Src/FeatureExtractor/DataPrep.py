@@ -4,6 +4,7 @@ from os.path import isfile, join
 import sys
 import FeatureExtractor as fe
 import librosa
+import numpy as np
 
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
@@ -46,10 +47,13 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
                     mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, wavLength, numFft=numFft, numMFCC=numMFCC, hopLength=hopLength)
                     #for mfcc in mfccs:
                     #    dataVector.append(mfcc)
+
                     dataVector.append(mfccs)
                 else:
                     raise Exception("Error: Not valid feature ID")
                 labelVector.append(label)
+                #for i in range(0, len(mfccs)):
+                #    labelVector.append(label)
             except Exception as error:
                 print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)
