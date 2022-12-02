@@ -27,35 +27,38 @@ import DataPrep as dp
 #Define all of the classifiers to test
 classifier = GaussianNB()
 
-def run_grid_search(originalData, augDataset, numFFTs, numMFCCs, fileLengths, outputFile):
+def run_grid_search(originalData, augDataset, numFFTs, numMFCCs, fileLengths, hopDivisions, outputFile):
     output = open(outputFile, "a")
 
-    for numMFCC in numMFCCs:
-        output.write("numMFCCs: " + str(numMFCC) + ",\n")
+    for hopDivision in hopDivisions:
+        output.write("hopDivisions= " + str(hopDivision) + ",\n\n")
+        for numMFCC in numMFCCs:
+            output.write("numMFCCs= " + str(numMFCC) + ",\n")
 
-        output.write("FileLength")
-        for fileLength in fileLengths:
-            output.write("," + str(fileLength))
-        output.write("\n")
-
-        for numFFT in numFFTs:
-            output.write(str(numFFT) + ":")
+            output.write("[]")
             for fileLength in fileLengths:
-                output.write(",")
-                result = test_dataset(originalData, augDataset, numFFT, numMFCC, fileLength)
-                output.write(str(result[0]) + " : " + str(result[1]))
+                output.write("," + str(fileLength))
             output.write("\n")
-            output.flush()
 
+            for numFFT in numFFTs:
+                output.write(str(numFFT) + ":")
+                for fileLength in fileLengths:
+                    output.write(",")
+                    result = test_dataset(originalData, augDataset, numFFT, numMFCC, int(numFFT / hopDivision), fileLength)
+                    output.write(str(result[0]) + " | " + str(result[1]))
+                output.write("\n")
+                output.flush()
+
+            output.write("\n")
         output.write("\n\n")
     output.close()
             
-def test_dataset(originalDataset, augmentedDataset, numFFT, numMFCC, fileLength):
+def test_dataset(originalDataset, augmentedDataset, numFFT, numMFCC, hopLength, fileLength):
     numFolds = 5
-    (dataFolds, labelFolds) = dp.prepare_input_data_with_folds(originalDataset, ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0, fileLength, 4, numFolds, numFft=numFFT, numMFCC=numMFCC)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+    (dataFolds, labelFolds) = dp.prepare_input_data_with_folds(originalDataset, ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0, fileLength, 4, numFolds, numFft=numFFT, numMFCC=numMFCC, hopLength=hopLength)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
     (orignialDataFolds, orignialLabelFolds) = (dataFolds, labelFolds)
 
-    (dataFoldsBuffer, labelFoldsBuffer) = dp.prepare_input_data_with_folds(originalDataset + augmentedDataset, ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0, fileLength, 4, numFolds, numFft=numFFT, numMFCC=numMFCC)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+    (dataFoldsBuffer, labelFoldsBuffer) = dp.prepare_input_data_with_folds(originalDataset + augmentedDataset, ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0, fileLength, 4, numFolds, numFft=numFFT, numMFCC=numMFCC, hopLength=hopLength)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
     for fold in range(0, numFolds):
         dataFolds[fold] += dataFoldsBuffer[fold]
         labelFolds[fold] += labelFoldsBuffer[fold]
@@ -89,4 +92,4 @@ def test_dataset(originalDataset, augmentedDataset, numFFT, numMFCC, fileLength)
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 originalDataset = os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s")
-run_grid_search(originalDataset, "-Augmented-MFCC", [256, 512, 1024, 2048, 4096], [10, 15, 20, 25, 30], [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2], "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/grid_search-ESC-50-MFCC-Fixed-Hop-Length.csv")
+run_grid_search(originalDataset, "-Augmented-MFCC", [256, 512, 1024, 2048, 4096], [10, 15, 20, 25, 30], [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2], [1, 2], "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/grid_search-ESC-50-MFCC.csv")

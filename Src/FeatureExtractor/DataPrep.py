@@ -8,7 +8,7 @@ import librosa
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
 
-def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=2048, numMFCC=20):
+def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=2048, numMFCC=20, hopLength=1024):
     """Extract the feature vectors from the WAV files
     Prams:
         dir = dataset dir
@@ -43,7 +43,7 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
                     centroids = fe.wav_to_spectral_centroid_bands(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     dataVector.append(centroids)
                 elif featureType == 4:
-                    mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, wavLength, numFft=numFft, numMFCC=numMFCC)
+                    mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, wavLength, numFft=numFft, numMFCC=numMFCC, hopLength=hopLength)
                     #for mfcc in mfccs:
                     #    dataVector.append(mfcc)
                     dataVector.append(mfccs)
@@ -54,11 +54,11 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
                 print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)
 
-def prepare_input_data_with_folds(dir, labels, frameTime, wavLength, featureType, numFolds=10, numFft=2048, numMFCC=20):
+def prepare_input_data_with_folds(dir, labels, frameTime, wavLength, featureType, numFolds=10, numFft=2048, numMFCC=20, hopLength=1024):
     dataFolds = []
     labelFolds = []
     for i in range(1, numFolds + 1):
-        (dataVector, labelVector) = prepare_input_data(dir + "/fold" + str(i), labels, frameTime, wavLength, featureType, numFft=numFft, numMFCC=numMFCC)
+        (dataVector, labelVector) = prepare_input_data(dir + "/fold" + str(i), labels, frameTime, wavLength, featureType, numFft=numFft, numMFCC=numMFCC, hopLength=hopLength)
         dataFolds.append(dataVector)
         labelFolds.append(labelVector)
     return (dataFolds, labelFolds)

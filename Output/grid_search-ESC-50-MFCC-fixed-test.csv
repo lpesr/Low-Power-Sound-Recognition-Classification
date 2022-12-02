@@ -1,0 +1,28 @@
+hopDivisions: 1,
+
+numMFCCs: 10,
+FileLength,0.25
+256:,0.732 : 18.529
+512:,0.720 : 9.729
+
+numMFCCs: 15,
+FileLength,0.25
+256:,0.729 : 27.332
+512:,0.746 : 14.129
+
+
+
+hopDivisions: 2,
+
+numMFCCs: 10,
+FileLength,0.25
+256:,0.724 : 36.132
+512:,0.718 : 18.529
+
+numMFCCs: 15,
+FileLength,0.25
+256:,0.724 : 53.732
+512:,0.740 : 27.332
+
+
+

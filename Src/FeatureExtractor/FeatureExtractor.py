@@ -106,16 +106,16 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
     sums = np.sum(magnitudes)
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
-def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20):
-    audioData, sampleRate = lb.load(fileName)
+def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=1024):
+    audioData, sampleRate = lb.load(fileName, sr=25000)
 
-    audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
+    #audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
 
-    end = int(paddingSize * sampleRate)
-    if len(audioData) < end:
-        audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
+    #end = int(paddingSize * sampleRate)
+    #if len(audioData) < end:
+    #    audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
 
-    return np.array(lb.feature.mfcc(y=audioData, sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=int(numFft / 2))).flatten()
+    return np.array(lb.feature.mfcc(y=audioData[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
 
 def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)

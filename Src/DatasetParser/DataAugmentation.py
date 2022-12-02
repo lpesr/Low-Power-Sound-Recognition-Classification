@@ -30,12 +30,12 @@ def set_audio_length(signal, sampleRate, length):
         return signal
 
 def compress_wav_file(filename, targetSamplerate, targetLength):
-    audioData, sampleRate = lb.load(filename)
+    audioData, sampleRate = lb.load(filename, sr=targetSamplerate)
     audioData = fe.convert_to_single_band(audioData)
-    audioData = lb.resample(audioData, orig_sr=sampleRate, target_sr=targetSamplerate)
+    #audioDataComp = lb.resample(audioData, orig_sr=sampleRate, target_sr=targetSamplerate)
     return set_audio_length(audioData, sampleRate, targetLength)
 
-def compress_dataset_folds(datasetDir, outputDir, labels, targetSamplerate, targetLength, nFolds=10):
+def compress_dataset_folds(datasetDir, outputDir, labels, targetSamplerate=25000, targetLength=0.5, nFolds=10):
     os.mkdir(outputDir)
     for i in range(1, nFolds + 1):
         os.mkdir(outputDir + "/fold" + str(i))
@@ -116,7 +116,7 @@ def augmentation_pipeline(audioData, sampleRate, filename, dir, label, fold, len
     #sf.write(dir + "-noise/" + fold + label + "/" + filename + "noise.wav", set_audio_length(add_white_noise(audioData), sampleRate, length), sampleRate, format='wav')
     #sf.write(dir + "-inverted/" + fold + label + "/" + filename + "inverted.wav", set_audio_length(invert_polarity(audioData), sampleRate, length), sampleRate, format='wav')
 
-def apply_data_augmentation_MFCC(dir, labels, length = 1, nFolds = 5):
+def apply_data_augmentation_MFCC(dir, labels, length = 0.5, nFolds = 5):
     for i in range(1, nFolds + 1):
         fold="fold" + str(i) + "/"
 
@@ -129,10 +129,12 @@ def apply_data_augmentation_MFCC(dir, labels, length = 1, nFolds = 5):
 
         for label in labels:
             for file in dp.get_wav_files(dir + "/" + fold[:-1], label):
-                audioData, sampleRate = lb.load(dir + "/" + fold + label + "/" + file)
-                augmentation_pipeline_MFCC(audioData, sampleRate, file[:-4], dir, label, fold, length)
+                audioData, sampleRate = lb.load(dir + "/" + fold + label + "/" + file, sr=25000)
+                audioData = fe.convert_to_single_band(audioData)
+                #audioDataComp = lb.resample(audioData, orig_sr=sampleRate, target_sr=25000)
+                augmentation_pipeline_MFCC(audioData, 25000, file[:-4], dir, label, fold, length)
 
-def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold, length = 1):
+def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold, length = 0.5):
     for i in range(0, 3):
         sf.write(dir + "-Augmented-MFCC/" + fold + label + "/" + filename + "speed-" + str(i) + ".wav", set_audio_length(lb.effects.time_stretch(audioData, rate=np.random.uniform(0.8, 1.1)), sampleRate, length), sampleRate, format='wav')
     
@@ -142,16 +144,6 @@ def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold
     sf.write(dir + "-Augmented-MFCC/" + fold + label + "/" + filename + "gain.wav", set_audio_length(random_gain(audioData), sampleRate, length), sampleRate, format='wav')
     sf.write(dir + "-Augmented-MFCC/" + fold + label + "/" + filename + "inverted.wav", set_audio_length(invert_polarity(audioData), sampleRate, length), sampleRate, format='wav')
 
-#compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)
-#apply_data_augmentation_folds(os.path.join(dirname, "Data/ESC-50-Folds-Compressed"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 5)
+#compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-ZCR"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)
 
-#compress_dataset(os.path.join(dirname, "Data/Speech-Commands"), os.path.join(dirname, "Data/Speech-Commands-Compressed"), ["yes", "no"], 25000, 1)
-#apply_data_augmentation(os.path.join(dirname, "Data/Speech-Commands-Compressed"), ["yes", "no"])
-
-#compress_dataset_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k"), os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"], 25000, 1)
-#apply_data_augmentation_urbansounds8k(os.path.join(dirname, "Data/UrbanSounds8k-Compressed"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn", "air_conditioner", "engine_idling", "street_music"])
-
-#compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 4, 5)
-#apply_data_augmentation_MFCC(os.path.join(dirname, "Data/ESC-50-Folds-Compressed-4s"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 4, 5)
-
-compress_dataset_folds(os.path.join(dirname, "Data/ESC-50-Folds"), os.path.join(dirname, "Data/ESC-50-Folds-Compressed-ZCR"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 25000, 1, 5)
+#apply_data_augmentation_MFCC(os.path.join(dirname, "Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"])
