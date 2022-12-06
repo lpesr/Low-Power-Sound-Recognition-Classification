@@ -1,7 +1,14 @@
+import os
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 import librosa as lb
+
+dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+sys.path.append(os.path.join(dirname, 'Src/DatasetParser'))
+import DataAugmentation as da
 
 def plot_fft(filename):
     _, transform = wavfile.read(filename)
@@ -127,6 +134,8 @@ def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=
         features.append(np.array(lb.feature.mfcc(y=featureChunk[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten())
 
     return features"""
+
+    da.mask_wav(audioData, sampleRate, 10, 12, 40, 60)
 
     return np.array(lb.feature.mfcc(y=audioData[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
 

@@ -65,6 +65,22 @@ def random_gain(data, min_factor = 0.5, max_factor = 1):
 def invert_polarity(data):
     return data * -1
 
+def frequency_masking(spectorgram, f0, f):
+    for t in range(0, len(spectorgram)):
+        for fq in range(f0, f):
+            spectorgram[t][fq] = 0
+    return spectorgram
+
+def time_masking(spectorgram, t0, t):
+    for T in range(t0, t):
+        for fq in range(0, len(spectorgram[T])):
+            spectorgram[T][fq] = 0
+    return spectorgram
+
+def mask_wav(wav, sr, f0, f, t0, t):
+    spectorgram = lb.feature.melspectrogram(wav, sr)
+    return lb.feature.inverse.mel_to_audio(M=time_masking(frequency_masking(spectorgram, f0, f), t0, t), sr=sr)
+
 def apply_data_augmentation_folds(dir, labels, nFolds):
     for i in range(1, nFolds + 1):
         apply_data_augmentation(dir, labels, fold="fold" + str(i) + "/")
