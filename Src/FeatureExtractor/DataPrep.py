@@ -9,7 +9,7 @@ import numpy as np
 def get_wav_files(dir, label) :
     return [f for f in listdir(dir + "/" + label) if isfile(join(dir + "/" + label, f))]
 
-def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=2048, numMFCC=20, hopLength=1024):
+def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=2048, numMFCC=20, hopLength=1024, augmentation=(0,0,0)):
     """Extract the feature vectors from the WAV files
     Prams:
         dir = dataset dir
@@ -44,16 +44,17 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
                     centroids = fe.wav_to_spectral_centroid_bands(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     dataVector.append(centroids)
                 elif featureType == 4:
-                    mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, wavLength, numFft=numFft, numMFCC=numMFCC, hopLength=hopLength)
-                    #for mfcc in mfccs:
-                    #    dataVector.append(mfcc)
-
+                    mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, wavLength, numFft=numFft, numMFCC=numMFCC, hopLength=hopLength, augmentation=augmentation)
                     dataVector.append(mfccs)
+
+                    #dataVector.append(mfccs)
                 else:
                     raise Exception("Error: Not valid feature ID")
+                #if len(mfccs) > 1:
+                #    for i in range(0, len(mfccs)):
+                #        labelVector.append(label)
+                #else:
                 labelVector.append(label)
-                #for i in range(0, len(mfccs)):
-                #    labelVector.append(label)
             except Exception as error:
                 print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)

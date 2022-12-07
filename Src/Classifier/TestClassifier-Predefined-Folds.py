@@ -25,7 +25,7 @@ import DataPrep as dp
 
 numFolds = 5
 #(dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/UrbanSounds8k"), ["drilling", "gun_shot", "siren", "children_playing", "car_horn"], 0.05, 0.5, 4)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
-(dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0, 0.5, 4, numFolds, numFft=512, numMFCC=15, hopLength=512)#dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.01, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(dataFolds, labelFolds) = dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 00.01, 0.5, 4, numFolds, numFft=512, numMFCC=15, hopLength=512)#dp.prepare_input_data_with_folds(os.path.join(dirname, "./Data/ESC-50-Folds"), ["glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"], 0.01, 0.5, 4, numFolds)#4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
 dirname = os.path.dirname(__file__)
 
@@ -33,22 +33,22 @@ dirname = os.path.dirname(__file__)
 classifiers = [
     #KNeighborsClassifier(10),
     #SVC(kernel="linear"),
-    SVC(kernel="rbf"),
+    #SVC(kernel="rbf"),
     #SVC(kernel="sigmoid"),
-    DecisionTreeClassifier(max_depth=100),
-    RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
+    #DecisionTreeClassifier(max_depth=100),
+    #RandomForestClassifier(max_depth=100, n_estimators=20, max_features=5),
     GaussianNB(var_smoothing=0.005336699231206307),
-    MLPClassifier(max_iter=1000),
+    #MLPClassifier(max_iter=1000),
 ]
 names = [
     #"Nearest Neighbors",
     #Linear SVM",
-    "RBF SVM",
+    #"RBF SVM",
     #"Sigmoid SVM",
-    "Decision Tree",
-    "Random Forest",
+    #"Decision Tree",
+    #"Random Forest",
     "Naive Bayes",
-    "Neural Net",
+    #"Neural Net",
 ]
 
 #Create a results matrix

@@ -46,7 +46,7 @@ def plot_features(X, Y):
     plt.ylabel("Hz")
     plt.show()
 
-(X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 1, 4) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+(X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.75, 4, augmentation=(20,20,0)) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 buffer = list(zip(X, Y))
 X = np.array(X)
 Y = np.array(Y)

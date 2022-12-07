@@ -113,7 +113,7 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
     sums = np.sum(magnitudes)
     return 0 if sums == 0 else np.sum(magnitudes*freqs) / sums                              # return weighted mean
 
-def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=1024):
+def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=1024, augmentation=(0,0,0)):
     audioData, sampleRate = lb.load(fileName, sr=25000)
 
     #audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
@@ -135,9 +135,30 @@ def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=
 
     return features"""
 
-    da.mask_wav(audioData, sampleRate, 10, 12, 40, 60)
+    (f, t, w) = augmentation
 
-    return np.array(lb.feature.mfcc(y=audioData[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
+    sample = da.mask_wav(audioData, sampleRate, f, t, w)
+    sample = da.set_audio_length(sample, sampleRate, paddingSize)
+
+    return np.array(lb.feature.mfcc(y=sample[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
+
+    """
+    samples = [audioData]
+
+    for augmentation in augmentations:
+        (f, t, w) = augmentation
+        samples.append(da.mask_wav(audioData, sampleRate, f, t, w))
+
+    snipped = []
+    for sample in samples:
+        snipped.append(da.set_audio_length(sample, sampleRate, paddingSize))
+
+    features = []
+    for sample in snipped:
+        features.append(np.array(lb.feature.mfcc(y=sample[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten())
+    
+    return features
+    #return np.array(lb.feature.mfcc(y=audioData[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()"""
 
 def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)

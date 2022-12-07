@@ -3,6 +3,9 @@ import sys
 import numpy as np
 import librosa as lb
 import soundfile as sf
+import tensorflow as tf
+import tensorflow_addons as tfa
+import random
 
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
@@ -77,9 +80,17 @@ def time_masking(spectorgram, t0, t):
             spectorgram[T][fq] = 0
     return spectorgram
 
-def mask_wav(wav, sr, f0, f, t0, t):
-    spectorgram = lb.feature.melspectrogram(wav, sr)
-    return lb.feature.inverse.mel_to_audio(M=time_masking(frequency_masking(spectorgram, f0, f), t0, t), sr=sr)
+def time_warp(spectorgram, W, w):
+    freqCenter = int(len(spectorgram[0]) / 2)
+    src = tf.Variable([[[freqCenter, W]]], dtype = float)
+    dst = tf.Variable([[[freqCenter, w]]], dtype = float)
+    return tfa.image.sparse_image_warp(spectorgram, src, dst, num_boundary_points = 6)[0].numpy()
+
+def mask_wav(wav, sr, f, t, w):
+    spectorgram = lb.feature.melspectrogram(y=wav, sr=sr)
+    if w != 0:
+        spectorgram = time_warp(spectorgram, random.randint(0, int(len(spectorgram) - w)), w)
+    return lb.feature.inverse.mel_to_audio(M=time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f)), f), random.randint(0, int(len(spectorgram) - t)), t), sr=sr)
 
 def apply_data_augmentation_folds(dir, labels, nFolds):
     for i in range(1, nFolds + 1):
