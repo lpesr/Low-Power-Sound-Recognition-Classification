@@ -81,15 +81,15 @@ def time_masking(spectorgram, t0, t):
     return spectorgram
 
 def time_warp(spectorgram, W, w):
-    freqCenter = int(len(spectorgram[0]) / 2)
-    src = tf.Variable([[[freqCenter, W]]], dtype = float)
-    dst = tf.Variable([[[freqCenter, w]]], dtype = float)
+    freqCenter = len(spectorgram) / 2
+    src = tf.Variable([[[freqCenter, W]]], dtype=float)
+    dst = tf.Variable([[[freqCenter, W + w]]], dtype=float)
     return tfa.image.sparse_image_warp(spectorgram, src, dst, num_boundary_points = 6)[0].numpy()
 
 def augment_spectorgram(wav, sr, nFft, hopLen, f, t, w):
     spectorgram = lb.feature.melspectrogram(y=wav, sr=sr, n_fft=nFft, hop_length=hopLen)
     if w != 0:
-        spectorgram = time_warp(spectorgram, random.randint(0, int(len(spectorgram) - w - 1)), w)
+        spectorgram = time_warp(spectorgram, random.randint(0, int(len(spectorgram[0]) - w - 1)), w)
     return time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f - 1)), f), random.randint(0, int(len(spectorgram[0]) - t - 1)), t)
     #return lb.feature.inverse.mel_to_audio(M=time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f)), f), random.randint(0, int(len(spectorgram) - t)), t), sr=sr)
 
