@@ -41,15 +41,19 @@ def run_evaluation(augmentations, outputFile):
 
     output.write("Augmented Data," + names[0] + "," + names[1] + "," + names[2] + "\n")
 
+    (originalX, originalY) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.75, 4, augmentation=(0,0,0))
+
     for augmentation in augmentations:
-        test_augmented_dataset(augmentation, output)
+        test_augmented_dataset(augmentation, output, originalX, originalY)
     output.close()
             
-def test_augmented_dataset(augmentation, outputFile):
-    (X, Y) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.75, 4, augmentations=[augmentation]) #4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+def test_augmented_dataset(augmentation, outputFile, originalX, originalY):
+    (augX, augY) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.75, 4, augmentation=augmentation) #4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
-    X = np.array(X)
-    Y = np.array(Y)
+    originalX = np.array(originalX)
+    originalY = np.array(originalY)
+    augX = np.array(augX)
+    augY = np.array(augY)
 
     numKFoldSplits = 10
     numKFoldRep = 2
@@ -65,15 +69,10 @@ def test_augmented_dataset(augmentation, outputFile):
         #K cross validate the data (there will be an equal number of both classes to train on)
         #This is because the data was split and then combined earlier
         kf = RepeatedKFold(n_splits=numKFoldSplits, n_repeats=numKFoldRep)
-        for train, test in kf.split(X):
-            X_train, y_train = [], []
-            datasets = list(map(list, zip(*X)))
-            for dataset in datasets:
-                X_train += list(np.array(dataset)[train])
-                y_train += list(np.array(Y[train]))
+        for train, test in kf.split(augX):
+            X_train, X_test = augX[train], originalX[test]
+            y_train, y_test = augY[train], originalY[test]
 
-            X_test = np.array(datasets[0])[test]
-            y_test = Y[test]
             #Fit the classifier and label the testing split
             clf = classifiers[j].fit(X_train, y_train)
 
@@ -89,6 +88,6 @@ def test_augmented_dataset(augmentation, outputFile):
 
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
-augmentations = [(20, 0, 0), (40, 0, 0), (0, 20, 0), (0, 40, 0), (0, 0, 30), (0, 0, 60), (20, 20, 0), (20, 40, 0), (40, 20, 0), (40, 40, 0), (20, 20, 30), (20, 40, 30), (20, 20, 60), (20, 40, 60), (40, 20, 30), (40, 40, 30), (40, 20, 60), (40, 40, 60), (0, 20, 30), (0, 40, 30), (0, 20, 60), (0, 40, 80)]
+augmentations = [(20, 0, 0), (10, 0, 0), (0, 20, 0), (0, 10, 0), (0, 0, 30), (0, 0, 60), (20, 20, 0), (20, 10, 0), (10, 20, 0), (10, 10, 0), (20, 20, 30), (20, 10, 30), (20, 20, 60), (20, 10, 60), (10, 20, 30), (10, 10, 30), (10, 20, 60), (10, 10, 60), (0, 20, 30), (0, 10, 30), (0, 20, 60), (0, 10, 80)]
 
-run_evaluation(augmentations, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/augmentationOutputSpeechCommands.csv")
+run_evaluation(augmentations, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/augmentationOutputSpeechCommandsContinued.csv")

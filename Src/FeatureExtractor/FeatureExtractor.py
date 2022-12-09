@@ -136,11 +136,15 @@ def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=
     return features"""
 
     (f, t, w) = augmentation
+    if (augmentation == (0, 0, 0)):
+        return np.array(lb.feature.mfcc(y=da.set_audio_length(audioData, sampleRate, paddingSize)[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
 
-    sample = da.mask_wav(audioData, sampleRate, f, t, w)
-    sample = da.set_audio_length(sample, sampleRate, paddingSize)
+    #sample = da.mask_wav(audioData, sampleRate, f, t, w)
+    #sample = da.set_audio_length(sample, sampleRate, paddingSize)
 
-    return np.array(lb.feature.mfcc(y=sample[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
+    spectorgram = lb.power_to_db(da.augment_spectorgram(da.set_audio_length(audioData, sampleRate, paddingSize), sampleRate, f, t, w))
+
+    return np.array(lb.feature.mfcc(S=spectorgram, sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
 
     """
     samples = [audioData]

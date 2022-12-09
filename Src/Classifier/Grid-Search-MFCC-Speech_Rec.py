@@ -55,6 +55,8 @@ def run_grid_search(originalData, augDataset, numFFTs, numMFCCs, fileLengths, ho
             
 def test_dataset(originalDataset, augmentedDataset, numFFT, numMFCC, hopLength, fileLength):
     (X, Y) = dp.prepare_input_data(originalDataset, ["yes", "no", "on", "off"], 0, fileLength, 4, numFft=numFFT, numMFCC=numMFCC, hopLength=hopLength, augmentation=augmentedDataset)
+    X = np.array(X)
+    Y = np.array(Y)
 
     numKFoldSplits = 10
     numKFoldRep = 2
@@ -83,4 +85,4 @@ def test_dataset(originalDataset, augmentedDataset, numFFT, numMFCC, hopLength, 
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 originalDataset = os.path.join(dirname, "Data/Speech-Commands")
-run_grid_search(originalDataset, (0, 0, 0), [512, 1024], [10, 15], [0.5, 0.75], [1], "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/grid_search-Speech-Recognition-MFCC.csv")
+run_grid_search(originalDataset, (0, 0, 0), [256, 512, 1024, 2048, 4096], [10, 15, 20, 25, 30], [0.25, 0.5, 0.75, 1, 1.25, 1.5], [1], "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/grid_search-Speech-Recognition-MFCC.csv")
