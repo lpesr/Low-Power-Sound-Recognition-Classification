@@ -41,14 +41,14 @@ def run_evaluation(augmentations, outputFile):
 
     output.write("Augmented Data," + names[0] + "," + names[1] + "," + names[2] + "\n")
 
-    (originalX, originalY) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.75, 4, augmentation=(0,0,0))
+    (originalX, originalY) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.5, 4, numFft=1024, numMFCC=10, hopLength=1024, augmentation=(0,0,0))
 
     for augmentation in augmentations:
         test_augmented_dataset(augmentation, output, originalX, originalY)
     output.close()
             
 def test_augmented_dataset(augmentation, outputFile, originalX, originalY):
-    (augX, augY) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.75, 4, augmentation=augmentation) #4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
+    (augX, augY) = dp.prepare_input_data(os.path.join(dirname, "Data/Speech-Commands"), ["yes", "no", "on", "off"], 0.05, 0.5, 4, numFft=1024, numMFCC=10, hopLength=1024, augmentation=augmentation) #4000)#, "jackhammer", "siren", "dog_bark"], 1500) #"glass_breaking", "siren", "hand_saw", "vacuum_cleaner", "crackling_fire"
 
     originalX = np.array(originalX)
     originalY = np.array(originalY)
@@ -88,6 +88,6 @@ def test_augmented_dataset(augmentation, outputFile, originalX, originalY):
 
 dirname = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
-augmentations = [(20, 0, 0), (10, 0, 0), (0, 20, 0), (0, 10, 0), (0, 0, 30), (0, 0, 60), (20, 20, 0), (20, 10, 0), (10, 20, 0), (10, 10, 0), (20, 20, 30), (20, 10, 30), (20, 20, 60), (20, 10, 60), (10, 20, 30), (10, 10, 30), (10, 20, 60), (10, 10, 60), (0, 20, 30), (0, 10, 30), (0, 20, 60), (0, 10, 80)]
+augmentations = [(20, 0, 0), (40,0, 0), (0, 1, 0), (0, 2, 0), (0, 0, 5), (0, 0, 10), (20, 1, 0), (20, 2, 0), (40, 1, 0), (40,2, 0), (20, 1, 5), (20, 2, 5), (20, 1, 10), (20, 2, 10), (40,1, 5), (40,2, 5), (40,1, 10), (40,2, 10), (0, 1, 5), (0, 2, 5), (0, 1, 10), (0, 2, 80)]
 
-run_evaluation(augmentations, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/augmentationOutputSpeechCommandsContinued.csv")
+run_evaluation(augmentations, "U:/GDP/ML Testing/Low-Power-Sound-Recognition-Classification/Output/augmentationOutputSpeechCommands.csv")

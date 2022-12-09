@@ -26,7 +26,7 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
     labelVector = []
     for label in labels:
         for file in get_wav_files(dir, label):
-            try:
+            #try:
                 if featureType == 0:
                     centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     dataVector.append(centroids)
@@ -55,8 +55,8 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
                 #        labelVector.append(label)
                 #else:
                 labelVector.append(label)
-            except Exception as error:
-                print('Caught this error: ' + repr(error))
+            #except Exception as error:
+            #    print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)
 
 def prepare_input_data_with_folds(dir, labels, frameTime, wavLength, featureType, numFolds=10, numFft=2048, numMFCC=20, hopLength=1024):

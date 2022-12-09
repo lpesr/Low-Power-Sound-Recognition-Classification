@@ -69,15 +69,15 @@ def invert_polarity(data):
     return data * -1
 
 def frequency_masking(spectorgram, f0, f):
-    for t in range(0, len(spectorgram)):
-        for fq in range(f0, f + f0):
-            spectorgram[t][fq] = 0
+    for fq in range(f0, f + f0):
+        for t in range(0, len(spectorgram[fq])):
+            spectorgram[fq][t] = 0
     return spectorgram
 
 def time_masking(spectorgram, t0, t):
-    for T in range(t0, t + t0):
-        for fq in range(0, len(spectorgram[T])):
-            spectorgram[T][fq] = 0
+    for fq in range(0, len(spectorgram)):
+        for T in range(t0, t + t0):
+            spectorgram[fq][T] = 0
     return spectorgram
 
 def time_warp(spectorgram, W, w):
@@ -86,11 +86,11 @@ def time_warp(spectorgram, W, w):
     dst = tf.Variable([[[freqCenter, w]]], dtype = float)
     return tfa.image.sparse_image_warp(spectorgram, src, dst, num_boundary_points = 6)[0].numpy()
 
-def augment_spectorgram(wav, sr, f, t, w):
-    spectorgram = lb.feature.melspectrogram(y=wav, sr=sr)
+def augment_spectorgram(wav, sr, nFft, hopLen, f, t, w):
+    spectorgram = lb.feature.melspectrogram(y=wav, sr=sr, n_fft=nFft, hop_length=hopLen)
     if w != 0:
-        spectorgram = time_warp(spectorgram, random.randint(0, int(len(spectorgram) - w)), w)
-    return time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f)), f), random.randint(0, int(len(spectorgram) - t)), t)
+        spectorgram = time_warp(spectorgram, random.randint(0, int(len(spectorgram) - w - 1)), w)
+    return time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f - 1)), f), random.randint(0, int(len(spectorgram[0]) - t - 1)), t)
     #return lb.feature.inverse.mel_to_audio(M=time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f)), f), random.randint(0, int(len(spectorgram) - t)), t), sr=sr)
 
 def apply_data_augmentation_folds(dir, labels, nFolds):
