@@ -26,15 +26,12 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
     labelVector = []
     for label in labels:
         for file in get_wav_files(dir, label):
-            #try:
+            try:
                 if featureType == 0:
                     centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)
                     dataVector.append(centroids)
                 elif featureType == 1:
                     zcr = fe.wav_to_ZCR(dir  + "/" + label + "/" + file, frameTime, wavLength)
-                    #zcr = fe.wav_to_ZCR_overlapping_frames(dir  + "/" + label + "/" + file, frameTime, wavLength)
-                    #data, sr = librosa.load(dir  + "/" + label + "/" + file)
-                    #zcr = librosa.feature.zero_crossing_rate(data, frame_length = int(sr * frameTime), hop_length = int(sr * frameTime / 2))[0]
                     dataVector.append(zcr)
                 elif featureType == 2:
                     centroids = fe.wav_to_spectral_centroid(dir  + "/" + label + "/" + file, frameTime, wavLength)
@@ -46,17 +43,11 @@ def prepare_input_data(dir, labels, frameTime, wavLength, featureType, numFft=20
                 elif featureType == 4:
                     mfccs = fe.wav_to_MFCCs(dir  + "/" + label + "/" + file, wavLength, numFft=numFft, numMFCC=numMFCC, hopLength=hopLength, augmentation=augmentation)
                     dataVector.append(mfccs)
-
-                    #dataVector.append(mfccs)
                 else:
                     raise Exception("Error: Not valid feature ID")
-                #if len(mfccs) > 1:
-                #    for i in range(0, len(mfccs)):
-                #        labelVector.append(label)
-                #else:
                 labelVector.append(label)
-            #except Exception as error:
-            #    print('Caught this error: ' + repr(error))
+            except Exception as error:
+                print('Caught this error: ' + repr(error))
     return (dataVector, labelVector)
 
 def prepare_input_data_with_folds(dir, labels, frameTime, wavLength, featureType, numFolds=10, numFft=2048, numMFCC=20, hopLength=1024):

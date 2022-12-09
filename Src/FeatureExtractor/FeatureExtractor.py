@@ -116,53 +116,13 @@ def calculate_spectral_centroid_band(data, sampleRate, band):
 def wav_to_MFCCs(fileName, paddingSize = 10, numFft=2048, numMFCC=20, hopLength=1024, augmentation=(0,0,0)):
     audioData, sampleRate = lb.load(fileName, sr=25000)
 
-    #audioData = section_around_highest_power(audioData, sampleRate, paddingSize)
-
-    #end = int(paddingSize * sampleRate)
-    #if len(audioData) < end:
-    #    audioData = np.append(audioData, [0.0] * int(end - len(audioData)))
-
-    """bufferChunks = [audioData[x:x+int(paddingSize * sampleRate)] for x in range(0, len(audioData), int(paddingSize * sampleRate))]
-    avr = [np.mean(list(map(abs, chunk))) for chunk in bufferChunks]
-    featureChunks = []
-    for i, chunk in enumerate(bufferChunks):
-        if avr[i] > 0.01 and len(chunk) == int(paddingSize * sampleRate):
-            featureChunks.append(chunk)
-
-    features = []
-    for featureChunk in featureChunks:
-        features.append(np.array(lb.feature.mfcc(y=featureChunk[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten())
-
-    return features"""
-
     (f, t, w) = augmentation
     if (augmentation == (0, 0, 0)):
         return np.array(lb.feature.mfcc(y=da.set_audio_length(audioData, sampleRate, paddingSize)[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
 
-    #sample = da.mask_wav(audioData, sampleRate, f, t, w)
-    #sample = da.set_audio_length(sample, sampleRate, paddingSize)
-
     spectorgram = lb.power_to_db(da.augment_spectorgram(da.set_audio_length(audioData, sampleRate, paddingSize), sampleRate, numFft, hopLength, f, t, w))
 
     return np.array(lb.feature.mfcc(S=spectorgram, sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()
-
-    """
-    samples = [audioData]
-
-    for augmentation in augmentations:
-        (f, t, w) = augmentation
-        samples.append(da.mask_wav(audioData, sampleRate, f, t, w))
-
-    snipped = []
-    for sample in samples:
-        snipped.append(da.set_audio_length(sample, sampleRate, paddingSize))
-
-    features = []
-    for sample in snipped:
-        features.append(np.array(lb.feature.mfcc(y=sample[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten())
-    
-    return features
-    #return np.array(lb.feature.mfcc(y=audioData[0:int(paddingSize * sampleRate)], sr=sampleRate, n_fft=numFft, n_mfcc=numMFCC, hop_length=hopLength)).flatten()"""
 
 def wav_to_ZCR_overlapping_frames(fileName, frameTime, paddingSize = 10):
     (sampleRate, audioData, frameSize) = get_wav_data(fileName, frameTime)

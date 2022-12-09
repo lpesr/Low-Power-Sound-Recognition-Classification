@@ -2,6 +2,13 @@ import os
 import csv
 
 def read_csv_label_data(csvFileName, dir) :
+    """Seperate the ESC-50 files into sub dirs with folds and then a sub dir for the 
+    respective labels. This is done by reading the ESC-50 csv files that puts each
+    file into folds and labels.
+    Prams:
+        csvFileName = Path to the ESC-50 csv file
+        dir = Dir of the files
+    """
     with open(csvFileName, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
