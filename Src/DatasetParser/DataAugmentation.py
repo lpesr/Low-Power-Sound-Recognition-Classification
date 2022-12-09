@@ -14,11 +14,23 @@ import DataPrep as dp
 import FeatureExtractor as fe
 
 def highest_power(signal, sampleRate):
+    """Split the audio signal into 1ms chunks and then return the index for the 
+    highest powered chunk.
+    Prams:
+        signal = WAV file data
+        sampleRate = Sample rate of the WAV
+    """
     chunks = np.array_split(signal, len(signal) / sampleRate * 60)
     avr = [(i, np.mean(list(map(abs, chunk)))) for i, chunk in enumerate(chunks)]
-    return sorted(avr, key = lambda x: x[1], reverse=True)[0][0] * (sampleRate / 60)
+    return max(avr,key=lambda item:item[1])[0] * (sampleRate / 60)
 
 def set_audio_length(signal, sampleRate, length):
+    """Set the audio to the desired length around the highest powered chunk
+    Prams:
+        signal = WAV file data
+        sampleRate = Sample rate of the WAV
+        length = desired length
+    """
     i = highest_power(signal, sampleRate)
     numOfSamples = int(sampleRate * length)
     if len(signal) > numOfSamples:
@@ -33,12 +45,26 @@ def set_audio_length(signal, sampleRate, length):
         return signal
 
 def compress_wav_file(filename, targetSamplerate, targetLength):
+    """Resample the file and set it to the target length
+    Prams:
+        filename = WAV file path
+        targetSamplerate = resampled sample rate
+        targetLength = length to make the resulting WAV
+    """
     audioData, sampleRate = lb.load(filename, sr=targetSamplerate)
     audioData = fe.convert_to_single_band(audioData)
-    #audioDataComp = lb.resample(audioData, orig_sr=sampleRate, target_sr=targetSamplerate)
     return set_audio_length(audioData, sampleRate, targetLength)
 
 def compress_dataset_folds(datasetDir, outputDir, labels, targetSamplerate=25000, targetLength=0.5, nFolds=10):
+    """Compress a given dataset using compress_wav_file on folds
+    Prams:
+        datasetDir = Dir of the dataset
+        outputDir = Dir of the output dataset
+        labels = labels to read from the dataset
+        targetSamplerate = resamlped sample rate of the WAV
+        targetLength = length to make the resulting WAV
+        nFolds = number of folds in the dataset
+    """
     os.mkdir(outputDir)
     for i in range(1, nFolds + 1):
         os.mkdir(outputDir + "/fold" + str(i))
@@ -49,6 +75,14 @@ def compress_dataset_folds(datasetDir, outputDir, labels, targetSamplerate=25000
                 sf.write(outputDir + "/fold" + str(i) + "/" + label + "/" + file, compressedWav, targetSamplerate, format='wav')
 
 def compress_dataset(datasetDir, outputDir, labels, targetSamplerate, targetLength):
+    """Compress a given dataset using compress_wav_file
+    Prams:
+        datasetDir = Dir of the dataset
+        outputDir = Dir of the output dataset
+        labels = labels to read from the dataset
+        targetSamplerate = resamlped sample rate of the WAV
+        targetLength = length to make the resulting WAV
+    """
     if not os.path.exists(outputDir):
         os.mkdir(outputDir)
     for label in labels:
@@ -81,24 +115,40 @@ def time_masking(spectorgram, t0, t):
     return spectorgram
 
 def time_warp(spectorgram, W, w):
-    freqCenter = len(spectorgram) / 2
-    src = tf.Variable([[[freqCenter, W]]], dtype=float)
-    dst = tf.Variable([[[freqCenter, W + w]]], dtype=float)
+    """Used fensorflow's sparse image warp function to warp the time
+    domain of a spectorgram.
+    Prams:
+        spectorgram = spectorgram
+        W = root point
+        w = offset
+    """
+    freqCenter = float(len(spectorgram) / 2)
+    src = tf.Variable([[[freqCenter, W]]], dtype=spectorgram.dtype)
+    dst = tf.Variable([[[freqCenter, W + w]]], dtype=spectorgram.dtype)
     return tfa.image.sparse_image_warp(spectorgram, src, dst, num_boundary_points = 6)[0].numpy()
 
 def augment_spectorgram(wav, sr, nFft, hopLen, f, t, w):
+    """Apply data augmentation onto the speech commands dataset using
+    time warping, frequency masking, and time masking.
+    Prams:
+        wav = WAV file data
+        sr = sample rate of the WAV file
+        nFft = number of samples in an FFT
+        hopLen = number of samples between the frames
+        f = number of frequency bands to mask
+        t = amount of time to mask
+        w = amound of time warping
+    """
     spectorgram = lb.feature.melspectrogram(y=wav, sr=sr, n_fft=nFft, hop_length=hopLen)
     if w != 0:
         spectorgram = time_warp(spectorgram, random.randint(0, int(len(spectorgram[0]) - w - 1)), w)
     return time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f - 1)), f), random.randint(0, int(len(spectorgram[0]) - t - 1)), t)
-    #return lb.feature.inverse.mel_to_audio(M=time_masking(frequency_masking(spectorgram, random.randint(0, int(len(spectorgram) - f)), f), random.randint(0, int(len(spectorgram) - t)), t), sr=sr)
 
 def apply_data_augmentation_folds(dir, labels, nFolds):
     for i in range(1, nFolds + 1):
         apply_data_augmentation(dir, labels, fold="fold" + str(i) + "/")
 
 def apply_data_augmentation(dir, labels, length = 1, fold = ""):
-    #folders = ["-0.5-Speed", "-0.75-Speed", "-1.25-Speed", "-1.5-Speed", "--1-pitch", "--0.5-pitch", "-0.5-pitch", "-1-pitch", "-noise", "-inverted", "-randomGain"]
     folders = ["-0.8-Speed", "-0.9-Speed", "-1.1-Speed", "-1.2-Speed", "--4-pitch", "--3-pitch", "--2-pitch", "-2-pitch", "-3-pitch", "-4-pitch"]
 
     for folder in folders:
@@ -130,20 +180,6 @@ def augmentation_pipeline(audioData, sampleRate, filename, dir, label, fold, len
     sf.write(dir + "-3-pitch/" + fold + label + "/" + filename + "3-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=3), sampleRate, length), sampleRate, format='wav')
     sf.write(dir + "-4-pitch/" + fold + label + "/" + filename + "4-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=4), sampleRate, length), sampleRate, format='wav')
 
-    #sf.write(dir + "-0.5-Speed/" + fold + label + "/" + filename + "0.5-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=0.5), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-0.75-Speed/" + fold + label + "/" + filename + "0.75-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=0.75), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-1.25-Speed/" + fold + label + "/" + filename + "1.25-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=1.25), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-1.5-Speed/" + fold + label + "/" + filename + "1.5-speed.wav", set_audio_length(lb.effects.time_stretch(audioData, rate=1.5), sampleRate, length), sampleRate, format='wav')
-    
-    #sf.write(dir + "--1-pitch/" + fold + label + "/" + filename + "-1-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=-1), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "--0.5-pitch/" + fold + label + "/" + filename + "-0.5-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=-0.5), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-0.5-pitch/" + fold + label + "/" + filename + "0.5-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=0.5), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-1-pitch/" + fold + label + "/" + filename + "1-pitch.wav", set_audio_length(lb.effects.pitch_shift(audioData, sr=sampleRate, n_steps=1), sampleRate, length), sampleRate, format='wav')
-    
-    #sf.write(dir + "-randomGain/" + fold + label + "/" + filename + "gain.wav", set_audio_length(random_gain(audioData), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-noise/" + fold + label + "/" + filename + "noise.wav", set_audio_length(add_white_noise(audioData), sampleRate, length), sampleRate, format='wav')
-    #sf.write(dir + "-inverted/" + fold + label + "/" + filename + "inverted.wav", set_audio_length(invert_polarity(audioData), sampleRate, length), sampleRate, format='wav')
-
 def apply_data_augmentation_MFCC(dir, labels, length = 0.5, nFolds = 5):
     for i in range(1, nFolds + 1):
         fold="fold" + str(i) + "/"
@@ -159,7 +195,6 @@ def apply_data_augmentation_MFCC(dir, labels, length = 0.5, nFolds = 5):
             for file in dp.get_wav_files(dir + "/" + fold[:-1], label):
                 audioData, sampleRate = lb.load(dir + "/" + fold + label + "/" + file, sr=25000)
                 audioData = fe.convert_to_single_band(audioData)
-                #audioDataComp = lb.resample(audioData, orig_sr=sampleRate, target_sr=25000)
                 augmentation_pipeline_MFCC(audioData, 25000, file[:-4], dir, label, fold, length)
 
 def augmentation_pipeline_MFCC(audioData, sampleRate, filename, dir, label, fold, length = 0.5):
