@@ -78,3 +78,13 @@ To test the machine learning models run the desired scrpit from the Src/Classifi
 
 - TestClassifier.py: Tests the classifiers on a single set of paramaters,
 - Test-ClassifierVsClasses.py: Tests the classifiers on 2 to 8 classes, outputting in tablur format.
+
+## Data Augmentation
+
+The data augmentation py file contains functions for augmentating the data in meaningful ways
+
+The output dir contains the results for the different augmentations
+
+## Grid Search
+
+The grid Search py files determine the best parameters for each model
